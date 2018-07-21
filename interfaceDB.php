@@ -177,15 +177,45 @@ class DBSql
      	return $result;		
    	}	
 	
-    function sqlListaDocumentoIdentidad($idEmpresa, $estado){
-       	$sel_query = " SELECT * FROM vw_documento_identidad ";
-        $sel_query.= " WHERE idEmpresa = '".$idEmpresa."' AND estado = '".$estado."' ";
-        echo "query:".$sel_query;
+    function sqlListaTabla($idEmpresa, $tipoTabla, $estado){
+       	$sel_query = " SELECT * FROM vw_tabla ";
+		$sel_query.= " WHERE tipoTabla = '".$tipoTabla."' AND ";
+        $sel_query.= " idEmpresa = '".$idEmpresa."' AND estado = '".$estado."' ";
+        //echo "query:".$sel_query;
        	$result = mysql_query($sel_query);
      	return $result;
    	}	
 		
     /*-------------------------MAESTROS-----------------------------------------------------------------*/
+	
+	
+	/*----DEPARTAMENTO---*/
+	
+	function sqlListaDepartamento($estado){
+		$sel_query = " SELECT * ";
+		$sel_query.= " FROM vw_departamento ";
+        $sel_query.= " WHERE estado = '".$estado."' ";
+        $sel_query.= " ORDER BY departamento ";
+        //echo "query:".$sel_query;
+       	$result = mysql_query($sel_query);
+     	return $result;
+	}
+	
+	
+    /*----PROVINCIA---*/
+    
+    function sqlListaProvincia($idDepartamento, $estado){
+       	$sel_query = " SELECT * ";
+		$sel_query.= " FROM vw_provincia ";
+        $sel_query.= " WHERE estado = '".$estado."' AND idDepartamento = '".$idDepartamento."' ";
+        //echo "query:".$sel_query;
+       	$result = mysql_query($sel_query);
+     	return $result;		
+   	}
+	
+	
+	
+	
 
 	/*---CALIDAD--------*/	
 
@@ -460,9 +490,9 @@ class DBSql
 
  /*--------------------------------------------------------------------------------------------------*/
 
-    function sqlListaComprobante($idEmpresa, $tipoComprobante){
-       	$sel_query = " SELECT * FROM vw_comprobante ";
-        $sel_query.= " WHERE idEmpresa = '".$idEmpresa."' AND tipoComprobante = '".$tipoComprobante."' ";
+    function sqlListaComprobantePago($idEmpresa, $tipoComprobantePago){
+       	$sel_query = " SELECT * FROM comprobante_pago ";
+        $sel_query.= " WHERE idEmpresa = '".$idEmpresa."' AND tipoComprobantePago = '".$tipoComprobantePago."' ";
         //echo "query:".$sel_query;
        	$result = mysql_query($sel_query);
      	return $result;
@@ -530,6 +560,40 @@ class DBSql
 
         
     /*--------------------------------------------------------------------------------------------------*/
+
+
+    function sqlFiltrarGuiaRemision($idEmpresa, $filtro){
+		//print_r($filtro);
+       // $where = "";
+        $where = "  AND STR_TO_DATE(fechaEmision, '%d/%m/%Y') ";
+		$where .= " BETWEEN STR_TO_DATE('".$filtro['fechaDesde']."', '%d/%m/%Y') AND STR_TO_DATE('".$filtro['fechaHasta']."', '%d/%m/%Y') ";
+			
+		if($filtro['idComprobante'] != "0"){
+			$where .= " AND idComprobante = '".$filtro['idComprobante']."' ";
+		}
+		
+		if($filtro['serieNumero'] != ""){
+			$where .= " AND serieNumero = '".$filtro['serieNumero']."' ";
+		}
+		
+		if($filtro['cliente'] != ""){
+			$where .= " AND cliente = '".$filtro['cliente']."' ";
+		}
+		
+		$sel_query = " SELECT * ";
+		$sel_query.= " FROM cabecera_guia_remision ";
+        $sel_query.= " WHERE idEmpresa = '".$idEmpresa."' ".$where;
+		
+       	//echo "query:".$sel_query;
+       	$result = mysql_query($sel_query);
+     	return $result;		
+   	}
+
+
+
+
+
+
 
     /*--------------------------------------------------------------------------------------------------*/
     

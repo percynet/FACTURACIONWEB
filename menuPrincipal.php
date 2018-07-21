@@ -122,8 +122,8 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
 ?>
                     <li>Ventas
                         <ul style='width: 200px;'>
-                            <li><a href="#" onclick="Ir_A_Pagina('ventas/comprobanteVenta/filtroComprobanteVenta');">Boletas y Facturas</a></li>
-                            <li><a href="#" onclick="Ir_A_Pagina('enContruccion');">Guias de Remision</a></li>
+                            <li><a href="#" onclick="Ir_A_Pagina('ventas/factura_boleta/filtroFacturaBoleta');">Facturas y Boletas</a></li>
+                            <li><a href="#" onclick="Ir_A_Pagina('ventas/guia_remision/filtroGuiaRemision');">Guias de Remisión</a></li>
                         </ul>
                     </li>
 <?php

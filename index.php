@@ -62,6 +62,8 @@
     <script type="text/javascript" src="theme/jquery/jqwidgets/jqwidgets/jqxtooltip.js"></script> 
         
     <script type="text/javascript" src="theme/jquery/jqwidgets/jqwidgets/globalization/globalize.js"></script>
+    <script type="text/javascript" src="theme/jquery/jqwidgets/jqwidgets/globalization/globalize.culture.es.js"></script>
+
 
 	<script type="text/javascript">
         $(document).ready(function() {
