@@ -52,6 +52,173 @@ class DBsp
 
 /*---------------------------------------------------------------------------*/
 
+	function execSP_InsertCabeceraGuiaRemision($cabecera){
+       	$sel_query = " CALL sp_insert_cabecera_guia_remision( '".
+                        $cabecera['idEmpresa']."','".
+						$cabecera['serieNumeroGRCliente']."','".
+                        $cabecera['fechaEmision']."','".
+						$cabecera['fechaTraslado']."','".
+						$cabecera['idClienteRemitente']."','".
+						$cabecera['clienteRemitente']."','".
+						$cabecera['documentoIdentidadCR']."','".
+						$cabecera['numeroDocumentoIdentidadCR']."','".
+						$cabecera['idDireccionPartida']."','".
+						$cabecera['tipoViaPAR']."','".
+						$cabecera['nombreViaPAR']."','".
+						$cabecera['numeroPAR']."','".
+						$cabecera['interiorPAR']."','".
+						$cabecera['zonaPAR']."','".
+						$cabecera['departamentoPAR']."','".
+						$cabecera['provinciaPAR']."','".
+						$cabecera['distritoPAR']."','".
+						$cabecera['idClienteDestinatario']."','".
+						$cabecera['clienteDestinatario']."','".
+						$cabecera['documentoIdentidadCD']."','".
+						$cabecera['numeroDocumentoIdentidadCD']."','".
+						$cabecera['idDireccionLlegada']."','".
+						$cabecera['tipoViaLLE']."','".
+						$cabecera['nombreViaLLE']."','".
+						$cabecera['numeroLLE']."','".
+						$cabecera['interiorLLE']."','".
+						$cabecera['zonaLLE']."','".
+						$cabecera['departamentoLLE']."','".
+						$cabecera['provinciaLLE']."','".
+						$cabecera['distritoLLE']."','".
+						$cabecera['idTransportista']."','".
+						$cabecera['razonSocialTransportista']."','".
+						$cabecera['rucTransportista']."','".
+						$cabecera['observaciones']."','".
+						$cabecera['idVehiculo']."','".
+						$cabecera['idMarca']."','".
+						$cabecera['marca']."','".
+						$cabecera['placaTracto']."','".
+						$cabecera['placaRemolque']."','".
+						$cabecera['configuracionVehicular']."','".
+						$cabecera['certificadoInscripcion']."','".
+						$cabecera['idChofer']."','".
+						$cabecera['chofer']."','".
+						$cabecera['licenciaConducir']."','".
+						$cabecera['idUsuario']."' ) ";
+						
+        //echo "***query:".$sel_query;
+       	$result = mysqli_query($this->dbSP['linkConex'], $sel_query);
+     	return $result;
+   	}
+
+	function execSP_UpdateCabeceraGuiaRemision($cabecera){
+       	$sel_query = " CALL sp_update_cabecera_guia_remision( '".
+                        $cabecera['idEmpresa']."','".
+						$cabecera['idCabeceraGR']."','".
+						$cabecera['serieNumeroGRCliente']."','".
+                        $cabecera['fechaEmision']."','".
+						$cabecera['fechaTraslado']."','".
+						$cabecera['idClienteRemitente']."','".
+						$cabecera['clienteRemitente']."','".
+						$cabecera['documentoIdentidadCR']."','".
+						$cabecera['numeroDocumentoIdentidadCR']."','".
+						$cabecera['idDireccionPartida']."','".
+						$cabecera['tipoViaPAR']."','".
+						$cabecera['nombreViaPAR']."','".
+						$cabecera['numeroPAR']."','".
+						$cabecera['interiorPAR']."','".
+						$cabecera['zonaPAR']."','".
+						$cabecera['departamentoPAR']."','".
+						$cabecera['provinciaPAR']."','".
+						$cabecera['distritoPAR']."','".
+						$cabecera['idClienteDestinatario']."','".
+						$cabecera['clienteDestinatario']."','".
+						$cabecera['documentoIdentidadCD']."','".
+						$cabecera['numeroDocumentoIdentidadCD']."','".
+						$cabecera['idDireccionLlegada']."','".
+						$cabecera['tipoViaLLE']."','".
+						$cabecera['nombreViaLLE']."','".
+						$cabecera['numeroLLE']."','".
+						$cabecera['interiorLLE']."','".
+						$cabecera['zonaLLE']."','".
+						$cabecera['departamentoLLE']."','".
+						$cabecera['provinciaLLE']."','".
+						$cabecera['distritoLLE']."','".
+						$cabecera['idTransportista']."','".
+						$cabecera['razonSocialTransportista']."','".
+						$cabecera['rucTransportista']."','".
+						$cabecera['observaciones']."','".
+						$cabecera['idVehiculo']."','".
+						$cabecera['idMarca']."','".
+						$cabecera['marca']."','".
+						$cabecera['placaTracto']."','".
+						$cabecera['placaRemolque']."','".
+						$cabecera['configuracionVehicular']."','".
+						$cabecera['certificadoInscripcion']."','".
+						$cabecera['idChofer']."','".
+						$cabecera['chofer']."','".
+						$cabecera['licenciaConducir']."','".
+						$cabecera['idUsuario']."' ) ";
+						
+        //echo "***query:".$sel_query;
+       	$result = mysqli_query($this->dbSP['linkConex'], $sel_query);
+     	return $result;
+   	}
+		
+	function execSP_InsertDetalleGuiaRemision($detalle){
+       	$sel_query = " CALL sp_insert_detalle_guia_remision( '".
+                        $detalle['idEmpresa']."','".
+						$detalle['idCabeceraGR']."','".
+                        $detalle['idProducto']."','".
+						$detalle['codigo']."','".
+						$detalle['descripcion']."','".
+						$detalle['cantidad']."','".
+						$detalle['peso']."','".
+						$detalle['unidadMedida']."','".
+						$detalle['costo']."','".
+						$detalle['idUsuario']."' ) ";
+						
+        //echo "***query:".$sel_query;
+       	$result = mysqli_query($this->dbSP['linkConex'], $sel_query);
+		//print_r($result);
+		
+		if ($result){
+			mysqli_query($this->dbSP['linkConex'],"COMMIT");
+	  	}else{
+			mysqli_query($this->dbSP['linkConex'],"ROLLBACK");
+		}
+		
+     	return $result;
+   	}
+
+	function execSP_DeleteDetalleGuiaRemision($detalle){
+       	$sel_query = " CALL sp_delete_detalle_guia_remision( '".
+                        $detalle['idEmpresa']."','".
+						$detalle['idCabeceraGR']."','".
+						$detalle['idUsuario']."' ) ";
+						
+        //echo "***query:".$sel_query;
+       	$result = mysqli_query($this->dbSP['linkConex'], $sel_query);
+		//print_r($result);
+		
+		if ($result){
+			mysqli_query($this->dbSP['linkConex'],"COMMIT");
+	  	}else{
+			mysqli_query($this->dbSP['linkConex'],"ROLLBACK");
+		}
+		
+     	return $result;
+   	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*---------------------------------------------------------------------------*/
+
+
 	function execSP_InsertCalidad($calidad){
        	$sel_query = " CALL sp_insert_calidad( '".
                         $calidad['idEmpresa']."','".

@@ -217,72 +217,14 @@ class DBSql
 	
 	
 
-	/*---CALIDAD--------*/	
 
-    function sqlFiltrarCalidad($idEmpresa, $filtro){
-		//print_r($filtro);
-        $where = "";
-        
-		if($filtro['filtro'] == "1"){
-			$where .= " AND calidad like '%".$filtro['valor']."%' ";
-        }
-		
-		$sel_query = " SELECT * ";
-		$sel_query.= " FROM vw_calidad ";
-        $sel_query.= " WHERE idEmpresa = '".$idEmpresa."' ".$where;
-		
-       	//echo "query:".$sel_query;
-       	$result = mysql_query($sel_query);
-     	return $result;		
-   	}   
- 	
-    function sqlGetCalidadXID($idCalidad){
-       	$sel_query = " SELECT * FROM vw_calidad ";
-        $sel_query.= " WHERE idCalidad = '".$idCalidad."' ";
-        //echo "query:".$sel_query;
-       	$result = mysql_query($sel_query);
-     	return $result;
-   	}
-
-    function sqlListaCalidad($idEmpresa){
-       	$sel_query = " SELECT * FROM vw_calidad ";
-         $sel_query.= " WHERE idEmpresa = '".$idEmpresa."' ";
-        //echo "query:".$sel_query;
-       	$result = mysql_query($sel_query);
-     	return $result;
-   	}
 	
-	/*---COLOR--------*/	
+	/*---TRANSPORTISTA--------*/	
 
-    function sqlFiltrarColor($idEmpresa, $filtro){
-		//print_r($filtro);
-        $where = "";
-        
-		if($filtro['filtro'] == "1"){
-			$where .= " AND color like '%".$filtro['valor']."%' ";
-        }
-		
-		$sel_query = " SELECT * ";
-		$sel_query.= " FROM vw_color ";
-        $sel_query.= " WHERE idEmpresa = '".$idEmpresa."' ".$where;
-		
-       	//echo "query:".$sel_query;
-       	$result = mysql_query($sel_query);
-     	return $result;		
-   	}   
- 	
-    function sqlGetColorXID($idColor){
-       	$sel_query = " SELECT * FROM vw_color ";
-        $sel_query.= " WHERE idColor = '".$idColor."' ";
-        //echo "query:".$sel_query;
-       	$result = mysql_query($sel_query);
-     	return $result;
-   	}
-
-    function sqlListaColor($idEmpresa){
-       	$sel_query = " SELECT * FROM vw_color ";
-         $sel_query.= " WHERE idEmpresa = '".$idEmpresa."' ";
-        //echo "query:".$sel_query;
+    function sqlListaTransportista($idEmpresa, $estado){
+       	$sel_query = " SELECT * FROM vw_transportista ";
+        $sel_query.= " WHERE idEmpresa = '".$idEmpresa."' AND estado = '".$estado."'";
+        echo "query:".$sel_query;
        	$result = mysql_query($sel_query);
      	return $result;
    	}	
@@ -306,9 +248,9 @@ class DBSql
      	return $result;		
    	}   
  	
-    function sqlGetMarcaXID($idMarca){
+    function sqlGetMarcaXID($idMarca, $estado){
        	$sel_query = " SELECT * FROM vw_marca ";
-        $sel_query.= " WHERE idMarca = '".$idMarca."' ";
+        $sel_query.= " WHERE idMarca = '".$idMarca."' AND estado = '".$esatdo."´";
         //echo "query:".$sel_query;
        	$result = mysql_query($sel_query);
      	return $result;
@@ -358,7 +300,65 @@ class DBSql
      	return $result;
    	}
 	
+/*---------------------------------------------------------*/
+
+	/*---VEHICULO--------*/	
+
+    function sqlFiltrarVehiculo($filtro){
+		//print_r($filtro);
+        $where = "";
+		$where .= " AND idTransportista = '".$filtro['idTransportista']."' ";
+        
+		if($filtro['idMarca'] != "0"){
+			$where .= " AND idMarca = '".$filtro['idMarca']."' ";
+        }
+		if($filtro['idModelo'] != "0"){
+			$where .= " AND idModelo = '".$filtro['idModelo']."' ";
+        }
+				
+		$sel_query = " SELECT * ";
+		$sel_query.= " FROM vw_vehiculo ";
+        $sel_query.= " WHERE idEmpresa = '".$filtro['idEmpresa']."' ".$where;
+		
+       	//echo "query:".$sel_query;
+       	$result = mysql_query($sel_query);
+		
+     	return $result;
+   	}
+
+
+	/*---CHOFER--------*/	
+
+    function sqlFiltrarChofer($filtro){
+		//print_r($filtro);
+        $where = "";
+		$where .= " AND idTransportista = '".$filtro['idTransportista']."' ";
+        
+		if($filtro['chofer'] != ""){
+			$where .= " AND chofer = '".$filtro['chofer']."' ";
+        }
+				
+		$sel_query = " SELECT * ";
+		$sel_query.= " FROM vw_chofer ";
+        $sel_query.= " WHERE idEmpresa = '".$filtro['idEmpresa']."' ".$where;
+		
+       	//echo "query:".$sel_query;
+       	$result = mysql_query($sel_query);
+		
+     	return $result;
+   	}
 	
+	
+	
+
+
+
+
+
+
+
+
+
 
 	/*---TIPO_PRODUCTO--------*/	
 
@@ -429,7 +429,7 @@ class DBSql
     function sqlListaProductos($idEmpresa){
        	$sel_query = " SELECT * FROM vw_producto ";
         $sel_query.= " WHERE idEmpresa = '".$idEmpresa."' ";
-        echo "query:".$sel_query;
+        //echo "query:".$sel_query;
        	$result = mysql_query($sel_query);
      	return $result;
    	}
@@ -437,47 +437,22 @@ class DBSql
     function sqlFiltrarProducto($idEmpresa, $filtro){
 		//print_r($filtro);
         $where = "";
-		
-		if($filtro['idTipoProducto'] != "0"){
-			$where .= " AND idTipoProducto = '".$filtro['idTipoProducto']."' ";
-		}
-		
-		if($filtro['idMarca'] != "0"){
-			$where .= " AND idMarca = '".$filtro['idMarca']."' ";
-		}
-		
-		if($filtro['idModelo'] != "0"){
-			$where .= " AND idModelo = '".$filtro['idModelo']."' ";
-		}
-		
-		if($filtro['idColor'] != "0"){
-			$where .= " AND idColor = '".$filtro['idColor']."' ";
-		}
-				
-		if($filtro['idCalidad'] != "0"){
-			$where .= " AND idCalidad = '".$filtro['idCalidad']."' ";
-		}
-				
-		if($filtro['codigo'] != ""){
+			
+		if($filtro['codigo'] == "1"){
 			$where .= " AND codigo  like '%".$filtro['codigo']."%' ";
+		}else{		
+			if($filtro['producto'] == "2"){
+				$where .= " AND producto like '%".$filtro['producto']."%' ";
+			}
 		}
-		
-		if($filtro['producto'] != ""){
-			$where .= " AND producto like '%".$filtro['producto']."%' ";
-		}
-		
-		if($filtro['anio'] != ""){
-			$where .= " AND anio = '".$filtro['anio']."' ";
-		}
-		
-		
+
 		$sel_query = " SELECT * ";
 		$sel_query.= " FROM vw_producto ";
         $sel_query.= " WHERE idEmpresa = '".$idEmpresa."' ".$where;
 		
        	//echo "query:".$sel_query;
        	$result = mysql_query($sel_query);
-     	return $result;		
+     	return $result;
    	}   
  	
     function sqlGetProductoXID($idProducto){
@@ -562,34 +537,48 @@ class DBSql
     /*--------------------------------------------------------------------------------------------------*/
 
 
-    function sqlFiltrarGuiaRemision($idEmpresa, $filtro){
+    function sqlFiltrarCabeceraGR($idEmpresa, $filtro){
 		//print_r($filtro);
-       // $where = "";
-        $where = "  AND STR_TO_DATE(fechaEmision, '%d/%m/%Y') ";
+        // $where = "";
+        $where = "  AND date_format(fechaEmision, '%Y-%m-%d') ";
 		$where .= " BETWEEN STR_TO_DATE('".$filtro['fechaDesde']."', '%d/%m/%Y') AND STR_TO_DATE('".$filtro['fechaHasta']."', '%d/%m/%Y') ";
-			
-		if($filtro['idComprobante'] != "0"){
-			$where .= " AND idComprobante = '".$filtro['idComprobante']."' ";
-		}
 		
 		if($filtro['serieNumero'] != ""){
 			$where .= " AND serieNumero = '".$filtro['serieNumero']."' ";
 		}
 		
 		if($filtro['cliente'] != ""){
-			$where .= " AND cliente = '".$filtro['cliente']."' ";
+			$where .= " AND clienteRemitente = '".$filtro['cliente']."' ";
 		}
 		
 		$sel_query = " SELECT * ";
 		$sel_query.= " FROM cabecera_guia_remision ";
-        $sel_query.= " WHERE idEmpresa = '".$idEmpresa."' ".$where;
+        $sel_query.= " WHERE idEmpresa = '".$idEmpresa."' ".$where. " AND idEstado = '3'";
 		
        	//echo "query:".$sel_query;
        	$result = mysql_query($sel_query);
      	return $result;		
    	}
 
-
+	/*--------------------------------------------------------------------------------------------------*/
+	
+	function sqlGetCabeceraGuiaRemision($idEmpresa, $idCabeceraGR){
+       	$sel_query = " SELECT * ";
+		$sel_query.= " FROM cabecera_guia_remision ";
+        $sel_query.= " WHERE idEmpresa = '".$idEmpresa."' AND idCabeceraGR = '".$idCabeceraGR."' ";
+        //echo "query:".$sel_query;
+       	$result = mysql_query($sel_query);
+     	return $result;
+   	}
+	
+	function sqlGetDetalleGuiaRemision($idEmpresa, $idCabeceraGR){
+	 	$sel_query = " SELECT * ";
+		$sel_query.= " FROM detalle_guia_remision ";
+        $sel_query.= " WHERE idEmpresa = '".$idEmpresa."' AND idCabeceraGR = '".$idCabeceraGR."' ";
+        //echo "query:".$sel_query;
+       	$result = mysql_query($sel_query);
+     	return $result;
+	}
 
 
 
@@ -617,7 +606,7 @@ class DBSql
      	return $result;
    	}    
     
-    function sqlListaTablaIndependiente($idEmpresa, $tabla){        
+    function sqlListaTablaIndependiente($idEmpresa, $tabla){
        	$sel_query = " SELECT * ";
 		$sel_query.= " FROM ".$tabla;
         $sel_query.= " WHERE idEstado = '1' AND idEmpresa = '".$idEmpresa."' ";
@@ -643,7 +632,7 @@ class DBSql
         $where = " ";
         
 		if($filtro['filtro'] == "1" || $filtro['filtro'] == "2"){
-			$where .= " AND nroDocumentoIdentidad like '%".$filtro['valor']."%' ";
+			$where .= " AND numeroDocumentoIdentidad like '%".$filtro['valor']."%' ";
 		}else{
 			if($filtro['filtro'] == "3"){
 				$where .= " AND cliente like '%".$filtro['valor']."%' ";
@@ -657,7 +646,7 @@ class DBSql
        	//echo "query:".$sel_query;
        	$result = mysql_query($sel_query);
      	return $result;		
-   	}   
+   	 }   
 
      function sqlFiltrarClienteXDoc($idEmpresa, $filtro, $idDocumentoIdentidad){
 		//print_r($filtro);
@@ -696,6 +685,43 @@ class DBSql
      	return $result;
    	}
 
+/*--------------------------------------------------------------------------------------*/
+
+	function sqlGetDireccionClienteXID($idEmpresa, $idDireccion){
+       	$sel_query = " SELECT * FROM vw_direccion_lugar ";
+        $sel_query.= " WHERE idDireccionLugar = '".$idDireccion."' ";
+        //echo "query:".$sel_query;
+       	$result = mysql_query($sel_query);
+     	return $result;
+   	}
+	
+/*--------------------------------------------------------------------------------------*/
+    /*----TRANSPORTISTA----*/ 
+	
+     function sqlFiltrarTransportista($idEmpresa, $filtro){
+		//print_r($filtro);
+        $where = " ";
+        
+		if($filtro['filtro'] == "1"){
+			$where .= " AND codigo like '%".$filtro['valor']."%' ";			
+		}else{
+			if($filtro['filtro'] == "2"){
+				$where .= " AND ruc like '%".$filtro['valor']."%' ";
+			}else{
+				if($filtro['filtro'] == "3"){
+					$where .= " AND razonSocial like '%".$filtro['valor']."%' ";
+    	        }
+			}
+        }
+		
+		$sel_query = " SELECT * ";
+		$sel_query.= " FROM vw_transportista ";
+        $sel_query.= " WHERE idEmpresa = '".$idEmpresa."' ".$where;
+		
+       	//echo "query:".$sel_query;
+       	$result = mysql_query($sel_query);
+     	return $result;		
+   	 }  
 	
 /*--------------------------------------------------------------------------------------*/	
 	function sqlListaSexo(){
@@ -911,25 +937,6 @@ class DBSql
      	return $result;
 	}
 	
-	/*--------------------------------------------------------------------------------------------------*/
-	
-	function sqlGetCabeceraGuiaRemision($idEmpresa, $idGuiaRemision){
-       	$sel_query = " SELECT * ";
-		$sel_query.= " FROM cabecera_guia_remision ";
-        $sel_query.= " WHERE idEmpresa = '".$idEmpresa."' AND idGuiaRemision = '".$idGuiaRemision."' ";
-        //echo "query:".$sel_query;
-       	$result = mysql_query($sel_query);
-     	return $result;
-   	}
-	
-	function sqlGetDetalleGuiaRemision($idEmpresa, $idGuiaRemision){
-	 	$sel_query = " SELECT * ";
-		$sel_query.= " FROM detalle_guia_remision ";
-        $sel_query.= " WHERE idEmpresa = '".$idEmpresa."' AND idGuiaRemision = '".$idGuiaRemision."' ";
-        //echo "query:".$sel_query;
-       	$result = mysql_query($sel_query);
-     	return $result;
-	}
 
 /*--------------------------------------------------------------------------------------*/	
   
