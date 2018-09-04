@@ -285,6 +285,24 @@
 		return false;
 	}
 	
+	function Obtener_Filas_Seleccionadas(objGrid){
+		var selectedrows = new Array();
+		var rowindexes = $("#"+objGrid).jqxGrid('getselectedrowindexes');
+		//alert("rowindexes:"+rowindexes);
+		
+		if(rowindexes.length > 0){
+			var boundrows = $("#"+objGrid).jqxGrid('getboundrows');
+			
+			for(var i =0; i < rowindexes.length; i++){
+				var row = boundrows[rowindexes[i]];				
+				selectedrows.push(row);
+			}			
+		}
+		return selectedrows;
+	}
+	
+	
+	
 	function createCenterPosWindow(){
         var html = '<div id="myCenterPosWindow">' +
                    '<div id="title">@Center</div>' +

@@ -13,14 +13,14 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
     $objdb -> db_connect();
         		
     if ($objdb -> is_connection()){
-    
+
 ?>
 
 <div class="row">
     <div class="col-lg-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                Listado de Boletas y Facturas
+                <b>Listado de Factura / Boleta</b>
             </div>
             <!-- /.panel-heading -->
             <div class="panel-body">
@@ -33,59 +33,42 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
 
                                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
                                         <tr style="height:30px;">    
-                                    		<td width="100">Fecha Desde:</td>
-                                       		<td>
+                                    		<td width="70">Fecha Desde:</td>
+                                       		<td width="100">
                                                 <div id="fechaDesdeDiv">
                                                     <div style='margin-top: 3px;' id='fechaDesde' />
-                                                </div>                                            	
-
+                                                </div>
                                             </td>
-                                            <td style="width: 20px;">&nbsp;</td>    
-                                    		<td width="100">Fecha Hasta:</td>
-                                       		<td>
+                                            <td width="10">&nbsp;</td>    
+                                    		<td width="70">Fecha Hasta:</td>
+                                       		<td width="100">
                                                 <div id="fechaHastaDiv">
                                                     <div style='margin-top: 3px;' id='fechaHasta' />
                                                 </div>                                            
                                             </td>
-                                            <td style="width: 20px;">&nbsp;</td>
-                                    		<td width="100">Comprobante:</td>
-                                       		<td>
-                                                <select name="cboComprobanteFiltro" id="cboComprobanteFiltro" style="width:150px;" >
-                                                  <option value="0">[TODOS]</option>
-                                                    <?php
-                                                        $rsListaComprobante= $objdb -> sqlListaComprobante($idEmpresa, 'U');
-                                                        if (mysql_num_rows($rsListaComprobante)!=0){
-                                                        	while ($rowComprobante = mysql_fetch_array($rsListaComprobante)){
-                                                        		$idComprobanteX = $rowComprobante["idComprobante"];
-                                                        		$comprobanteX = $rowComprobante["comprobante"];
-                                                        ?>			
-                                                        		<option value="<?= $idComprobanteX; ?>" ><?= $comprobanteX; ?></option>
-                                                        <?php
-                                                        	}
-                                                        	mysql_free_result($rsListaComprobante);
-                                                        }
-                                                    ?>
-                                                </select>                                            	
-                                            </td>
-                                            <td style="width: 10px;">&nbsp;</td>
+                                            <td width="10">&nbsp;</td>
+                                    		<td width="70">&nbsp;</td>
+                                       		<td width="200">&nbsp;</td> 
+                                            <td width="100">&nbsp;</td> 
+                                            <td width="100">&nbsp;</td>                                           
                                         </tr>
                                         <tr style="height:30px;">
-   											<td width="100">Serie-Numero:</td>
+   											<td>Serie-Numero:</td>
                                        		<td>
-                                            	<input  id="serieNumeroFiltro" maxlength="10" style="width:100px;" onkeypress="Enter_Buscar(event);" />
+                                            	<input  id="serieNumeroFiltro" maxlength="10" style="width:200px;" onkeypress="Enter_Buscar(event);" />
                                             </td>
-                                            <td style="width: 20px;">&nbsp;</td>
-                                            <td width="100">Cliente:</td>
-                                       		<td colspan="3">
+                                            <td>&nbsp;</td>
+                                            <td>Cliente:</td>
+                                       		<td colspan="4">
                                             	<input  id="clienteFiltro"  maxlength="100" style="width:350px;" onkeypress="Enter_Buscar(event);" />
-                                            </td>
+                                            </td>                                            
+                                            <td>&nbsp;</td>
                                             <td width="80">
                                           		<div style="padding:5px;">
                                                     <button class="btn btn-primary" onclick="Buscar_Resultados();">
                                                     	<i class="icon-search"></i> Buscar</button>
                                                 </div>
-                                            </td>
-                                            <td width="10">&nbsp;</td>
+                                            </td>                                           
                                         </tr>
                                      </table>
                                 </div>
@@ -136,18 +119,19 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
 	
 		$("#fechaDesde").jqxDateTimeInput({width: '100px', height: '20px'});
 		$("#fechaHasta").jqxDateTimeInput({width: '100px', height: '20px'});
+		$("#fechaDesde").jqxDateTimeInput({culture: 'es-ES'});
+		$("#fechaHasta").jqxDateTimeInput({culture: 'es-ES'});
 		
-		$("#serieNumeroFiltro").jqxInput({  width: '100px', height: '20px' });
-		$("#clienteFiltro").jqxInput({  width: '320px', height: '20px' });
+		$("#serieNumeroFiltro").jqxInput({  width: '150px', height: '20px' });
+		$("#clienteFiltro").jqxInput({  width: '400px', height: '20px' });
         
 		$('.solo-numero').keyup(function (){             
-            this.value = (this.value + '').replace(/[^0-9]/g, '');           
+            this.value = (this.value + '').replace(/[^0-9]/g, '');
         });
 		
 		Buscar_Resultados();
         
     });
-
     
 	function Enter_Buscar(e){	
 		if(Evento_Enter(e)){
@@ -160,7 +144,6 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
         var filtro = {
             fechaDesde: $.trim($("#fechaDesde").val()),
 			fechaHasta: $.trim($("#fechaHasta").val()),
-			idComprobante: $.trim($("#cboComprobanteFiltro").val()),
 			serieNumero: $.trim($("#serieNumeroFiltro").val()),
 			cliente: $.trim($("#clienteFiltro").val())
         };

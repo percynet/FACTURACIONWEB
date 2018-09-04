@@ -20,20 +20,19 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
 		
 		if ($objdb -> is_connection()){
 
-            $rsListaFacturaBoleta =  $objdb -> sqlFiltrarFacturaBoleta($idEmpresa, $filtro);
+            $rsListaFacturaBoleta =  $objdb -> sqlFiltrarCabeceraFB($idEmpresa, $filtro);
 			
             while ($row = mysql_fetch_array($rsListaFacturaBoleta, MYSQL_ASSOC)){
             	$listaFacturaBoleta[] = array(
-                    'idFacturaBoleta' => $row['idFacturaBoleta'],
-                    'comprobante' => $row['comprobante'],
-					'serieNumero' => $row['serieNumero'],
-					'fechaEmision' => $row['fechaEmision'],
+                    'idCabeceraFB' => $row['idCabeceraFB'],
+                    'fechaEmision' => $row['fechaEmision'],
+					'serieNumero' => $row['serieNumeroFB'],
+					'comprobante' => $row['comprobantePago'],
 					'cliente' => $row['cliente'],
-					'documentoIdentidad' => $row['documentoIdentidad'],
-					'nroDocumentoIdentidad' => $row['nroDocumentoIdentidad'],
-                    'moneda' => $row['moneda'],
-					'totalVenta' => $row['totalVenta'],
-					'estado' => $row['estado']
+					'formaPago' => $row['formaPago'],
+					'moneda' => $row['moneda'],
+					'totalVenta' => $row['totalVenta']
+					//'estado' => $row['estado']
             	);
             }
 			

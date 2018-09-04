@@ -158,6 +158,7 @@ class DBSql
         return $result;		
    	}	
 
+	/*
 	function sqlListaMoneda($estado){
        	$sel_query = " SELECT * ";
 		$sel_query.= " FROM vw_moneda ";
@@ -165,7 +166,8 @@ class DBSql
 		//echo "query:".$sel_query;
        	$result = mysql_query($sel_query);
      	return $result;		
-   	}	
+   	}
+	*/	
 	
 	/*--------------------------ADMINISTRACION----------------------------------------------------------*/
 	
@@ -434,10 +436,10 @@ class DBSql
      	return $result;
    	}
 	
-    function sqlFiltrarProducto($idEmpresa, $filtro){
+    function sqlFiltrarProducto($idEmpresa, $tipoProducto, $filtro){
 		//print_r($filtro);
         $where = "";
-			
+		
 		if($filtro['codigo'] == "1"){
 			$where .= " AND codigo  like '%".$filtro['codigo']."%' ";
 		}else{		
@@ -448,7 +450,7 @@ class DBSql
 
 		$sel_query = " SELECT * ";
 		$sel_query.= " FROM vw_producto ";
-        $sel_query.= " WHERE idEmpresa = '".$idEmpresa."' ".$where;
+        $sel_query.= " WHERE idEmpresa = '".$idEmpresa."' AND tipoProducto = '".$tipoProducto."' ".$where;
 		
        	//echo "query:".$sel_query;
        	$result = mysql_query($sel_query);
@@ -473,6 +475,26 @@ class DBSql
      	return $result;
    	}
 
+ /*--------------------------------------------------------------------------------------------------*/
+
+    function sqlListaFormaPago($idEmpresa){
+       	$sel_query = " SELECT idRegistroTabla as idFormaPago, descripcion as formaPago FROM vw_registro_tabla ";
+        $sel_query.= " WHERE idEmpresa = '".$idEmpresa."' AND nombreTabla = 'forma_pago' ";
+        //echo "query:".$sel_query;
+       	$result = mysql_query($sel_query);
+     	return $result;
+   	}
+	
+ /*--------------------------------------------------------------------------------------------------*/
+
+    function sqlListaMoneda($idEmpresa){
+       	$sel_query = " SELECT idRegistroTabla as idMoneda, descripcion as moneda FROM vw_registro_tabla ";
+        $sel_query.= " WHERE idEmpresa = '".$idEmpresa."' AND nombreTabla = 'moneda' ";
+        //echo "query:".$sel_query;
+       	$result = mysql_query($sel_query);
+     	return $result;
+   	}	
+	
  /*--------------------------------------------------------------------------------------------------*/
 
 	function sqlListaAlmacen($idEmpresa, $estado){
@@ -536,11 +558,10 @@ class DBSql
         
     /*--------------------------------------------------------------------------------------------------*/
 
-
     function sqlFiltrarCabeceraGR($idEmpresa, $filtro){
 		//print_r($filtro);
         // $where = "";
-        $where = "  AND date_format(fechaEmision, '%Y-%m-%d') ";
+        $where = "  AND DATE_FORMAT(fechaEmision, '%Y-%m-%d') ";
 		$where .= " BETWEEN STR_TO_DATE('".$filtro['fechaDesde']."', '%d/%m/%Y') AND STR_TO_DATE('".$filtro['fechaHasta']."', '%d/%m/%Y') ";
 		
 		if($filtro['serieNumero'] != ""){
@@ -559,6 +580,23 @@ class DBSql
        	$result = mysql_query($sel_query);
      	return $result;		
    	}
+	
+    function sqlFiltrarGR($idEmpresa, $filtro){
+		//print_r($filtro);
+        // $where = "";
+        
+		if($filtro['cliente'] != ""){
+			$where .= " AND clienteRemitente = '".$filtro['cliente']."' ";
+		}
+		
+		$sel_query = " SELECT * ";
+		$sel_query.= " FROM cabecera_guia_remision ";
+        $sel_query.= " WHERE idEmpresa = '".$idEmpresa."' ".$where. " AND idEstado = '3'";
+		
+       	//echo "query:".$sel_query;
+       	$result = mysql_query($sel_query);
+     	return $result;		
+   	}	
 
 	/*--------------------------------------------------------------------------------------------------*/
 	
@@ -579,13 +617,82 @@ class DBSql
        	$result = mysql_query($sel_query);
      	return $result;
 	}
+	
+	function sqlGetDetalleGRforFB($idEmpresa, $cabecerasGR){
+		
+	 	$sel_query = " SELECT * ";
+		$sel_query.= " FROM vw_detalle_gr_for_fb ";
+        $sel_query.= " WHERE idEmpresa = '".$idEmpresa."' AND idCabeceraGR IN (".$cabecerasGR.")";
+        //echo "query:".$sel_query;
+       	$result = mysql_query($sel_query);
+     	return $result;
+	}
+	
+	
+	
+    /*--------------------------------------------------------------------------------------------------*/
+
+    function sqlFiltrarCabeceraFB($idEmpresa, $filtro){
+		//print_r($filtro);
+        // $where = "";
+        $where = "  AND DATE_FORMAT(fechaEmision, '%Y-%m-%d') ";
+		$where .= " BETWEEN STR_TO_DATE('".$filtro['fechaDesde']."', '%d/%m/%Y') AND STR_TO_DATE('".$filtro['fechaHasta']."', '%d/%m/%Y') ";
+		
+		if($filtro['serieNumero'] != ""){
+			$where .= " AND serieNumeroFB = '".$filtro['serieNumero']."' ";
+		}
+		
+		if($filtro['cliente'] != ""){
+			$where .= " AND cliente = '".$filtro['cliente']."' ";
+		}
+		
+		$sel_query = " SELECT * ";
+		$sel_query.= " FROM cabecera_factura_boleta ";
+        $sel_query.= " WHERE idEmpresa = '".$idEmpresa."' ".$where. " AND idEstado = '3'";
+		
+       	//echo "query:".$sel_query;
+       	$result = mysql_query($sel_query);
+     	return $result;		
+   	}
+	
+    /*--------------------------------------------------------------------------------------------------*/
+
+	function sqlGetCabeceraFacturaBoleta($idEmpresa, $idCabeceraFB){
+       	$sel_query = " SELECT * ";
+		$sel_query.= " FROM cabecera_factura_boleta ";
+        $sel_query.= " WHERE idEmpresa = '".$idEmpresa."' AND idCabeceraFB = '".$idCabeceraFB."' ";
+        //echo "query:".$sel_query;
+       	$result = mysql_query($sel_query);
+     	return $result;
+   	}
+	
+	function sqlGetDetalleFacturaBoleta($idEmpresa, $idCabeceraFB){
+	 	$sel_query = " SELECT * ";
+		$sel_query.= " FROM detalle_factura_boleta ";
+        $sel_query.= " WHERE idEmpresa = '".$idEmpresa."' AND idCabeceraFB = '".$idCabeceraFB."' ";
+		$sel_query.= " ORDER BY idDetalleFB ";
+        //echo "query:".$sel_query;
+       	$result = mysql_query($sel_query);
+     	return $result;
+	}
+	  
+    /*--------------------------------------------------------------------------------------------------*/
+
+
+
+    /*--------------------------------------------------------------------------------------------------*/
+
+    /*--------------------------------------------------------------------------------------------------*/
+
 
 
 
 
 
     /*--------------------------------------------------------------------------------------------------*/
-    
+
+    /*--------------------------------------------------------------------------------------------------*/
+	   
     /*--------------------------------------------------------------------------------------------------*/
     /*----COMUNES----*/
         function sqlListaTablaUbigeoIndependiente($tabla){        

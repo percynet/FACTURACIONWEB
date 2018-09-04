@@ -163,13 +163,14 @@ class DBsp
        	$sel_query = " CALL sp_insert_detalle_guia_remision( '".
                         $detalle['idEmpresa']."','".
 						$detalle['idCabeceraGR']."','".
-                        $detalle['idProducto']."','".
+                        $detalle['tipoProducto']."','".
+						$detalle['idProducto']."','".
 						$detalle['codigo']."','".
 						$detalle['descripcion']."','".
 						$detalle['cantidad']."','".
 						$detalle['peso']."','".
 						$detalle['unidadMedida']."','".
-						$detalle['costo']."','".
+						$detalle['costoUnitario']."','".
 						$detalle['idUsuario']."' ) ";
 						
         //echo "***query:".$sel_query;
@@ -205,14 +206,122 @@ class DBsp
    	}
 
 
+/*---------------------------------------------------------------------------*/
+
+	function execSP_InsertCabeceraFacturaBoleta($cabecera){
+       	$sel_query = " CALL sp_insert_cabecera_factura_boleta( '".
+                        $cabecera['idEmpresa']."','".
+						$cabecera['serieNumeroGRef']."','".
+                        $cabecera['fechaEmision']."','".
+						$cabecera['idComprobantePago']."','".
+						$cabecera['comprobantePago']."','".
+						$cabecera['idFormaPago']."','".
+						$cabecera['formaPago']."','".
+						$cabecera['idMoneda']."','".
+						$cabecera['moneda']."','".
+						$cabecera['idCliente']."','".
+						$cabecera['cliente']."','".
+						$cabecera['documentoIdentidad']."','".
+						$cabecera['numeroDocumentoIdentidad']."','".
+						$cabecera['idDireccionActual']."','".
+						$cabecera['direccionActual']."','".
+						$cabecera['totalLetras']."','".
+						$cabecera['totalImporte']."','".
+						$cabecera['totalIGV']."','".
+						$cabecera['totalVenta']."','".
+						$cabecera['idUsuario']."' ) ";
+						
+        //echo "***query:".$sel_query;
+       	$result = mysqli_query($this->dbSP['linkConex'], $sel_query);
+     	return $result;
+   	}
+
+	function execSP_UpdateCabeceraFacturaBoleta($cabecera){
+       	$sel_query = " CALL sp_update_cabecera_factura_boleta( '".
+                        $cabecera['idEmpresa']."','".
+						$cabecera['idCabeceraFB']."','".
+						$cabecera['serieNumeroGRef']."','".
+                        $cabecera['fechaEmision']."','".
+						$cabecera['idComprobantePago']."','".
+						$cabecera['comprobantePago']."','".
+						$cabecera['idFormaPago']."','".
+						$cabecera['formaPago']."','".
+						$cabecera['idMoneda']."','".
+						$cabecera['moneda']."','".
+						$cabecera['idCliente']."','".
+						$cabecera['cliente']."','".
+						$cabecera['documentoIdentidad']."','".
+						$cabecera['numeroDocumentoIdentidad']."','".
+						$cabecera['idDireccionActual']."','".
+						$cabecera['direccionActual']."','".
+						$cabecera['totalLetras']."','".
+						$cabecera['totalImporte']."','".
+						$cabecera['totalIGV']."','".
+						$cabecera['totalVenta']."','".
+						$cabecera['idUsuario']."' ) ";
+						
+        //echo "***query:".$sel_query;
+       	$result = mysqli_query($this->dbSP['linkConex'], $sel_query);
+     	return $result;
+   	}
+		
+	function execSP_InsertDetalleFacturaBoleta($detalle){
+       	$sel_query = " CALL sp_insert_detalle_factura_boleta( '".
+                        $detalle['idEmpresa']."','".
+						$detalle['idCabeceraFB']."','".
+                        $detalle['tipoProducto']."','".
+						$detalle['idProducto']."','".						
+						$detalle['codigo']."','".
+						$detalle['descripcion']."','".
+						$detalle['cantidad']."','".
+						$detalle['precioUnitario']."','".
+						$detalle['importe']."','".
+						$detalle['idUsuario']."' ) ";
+						
+        //echo "***query:".$sel_query;
+       	$result = mysqli_query($this->dbSP['linkConex'], $sel_query);
+		//print_r($result);
+		
+		if ($result){
+			mysqli_query($this->dbSP['linkConex'],"COMMIT");
+	  	}else{
+			mysqli_query($this->dbSP['linkConex'],"ROLLBACK");
+		}
+		
+     	return $result;
+   	}
+
+	function execSP_DeleteDetalleFacturaBoleta($detalle){
+       	$sel_query = " CALL sp_delete_detalle_factura_boleta( '".
+                        $detalle['idEmpresa']."','".
+						$detalle['idCabeceraFB']."','".
+						$detalle['idUsuario']."' ) ";
+						
+        //echo "***query:".$sel_query;
+       	$result = mysqli_query($this->dbSP['linkConex'], $sel_query);
+		//print_r($result);
+		
+		if ($result){
+			mysqli_query($this->dbSP['linkConex'],"COMMIT");
+	  	}else{
+			mysqli_query($this->dbSP['linkConex'],"ROLLBACK");
+		}
+		
+     	return $result;
+   	}
+
+
+
+/*---------------------------------------------------------------------------*/
 
 
 
 
+/*---------------------------------------------------------------------------*/
 
 
 
-
+/*---------------------------------------------------------------------------*/
 
 
 

@@ -10,7 +10,7 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
 	//$idAlmacen = $_SESSION['ALMACEN']['idAlmacen'];
     
     if(isset($_POST['filtro'])){
-        
+        							
 		$filtro = $_POST['filtro'];
 
 ?>
@@ -47,8 +47,7 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
 		
 		var filtro = {
             fechaDesde: $.trim($("#fechaDesde").val()),
-			fechaHasta: $.trim($("#fechaHasta").val()),
-			idComprobante: $.trim($("#cboComprobanteFiltro").val()),
+			fechaHasta: $.trim($("#fechaHasta").val()),			
 			serieNumero: $.trim($("#serieNumeroFiltro").val()),
 			cliente: $.trim($("#clienteFiltro").val())
         };
@@ -57,16 +56,15 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
 		{
 			datatype: "json",            
 			datafields: [
-				{ name: 'idFacturaBoleta'},				
-				{ name: 'comprobante', type: 'string'},
+				{ name: 'idCabeceraFB'},				
+				{ name: 'fechaEmision', type: 'date', format: 'yyyy-MM-dd'},
 				{ name: 'serieNumero', type: 'string'},
-				{ name: 'fechaEmision', type: 'date'},
+				{ name: 'comprobante', type: 'string'},
 				{ name: 'cliente', type: 'string'},
-				{ name: 'documentoIdentidad', type: 'string'},
-				{ name: 'nroDocumentoIdentidad', type: 'string'},
+				{ name: 'formaPago', type: 'string'},
 				{ name: 'moneda', type: 'string'},
-				{ name: 'totalVenta', type: 'number'},
-				{ name: 'estado', type: 'string'}
+				{ name: 'totalVenta', type: 'string'}
+				//{ name: 'estado', type: 'string'}
 			],
             sortname: 'estado',
 			type: "POST",
@@ -87,8 +85,8 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
 		$("#jqxGridListaFacturaBoleta").jqxGrid(
 		{
             source: dataAdapter,   
-            //ide: 'idFacturaBoleta',
-            width: '100%%',
+            //ide: 'idCabeceraFB',
+            width: '100%',
 			height: '350px',
             pageable: true,
             pagerButtonsCount: 10,
@@ -103,20 +101,30 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
 				//container.append('<button id="btnEditar" type="button" class="btn" ><i class="icon-pencil"></i>&nbsp;Editar</button>&nbsp;');
 				//container.append('<button id="btnAbrir" type="button" class="btn btn-success" ><i class="fa fa-share"></i>&nbsp;Abrir</button>&nbsp;');
 				container.append('<button id="btnNuevo" type="button" class="btn btn-info" ><i class="fa fa-ok"></i>&nbsp;Nuevo</button>&nbsp;');  
-                //container.append('<button id="btnEditar" type="button" class="btn btn-warning" ><i class="fa fa-remove"></i>&nbsp;Editar</button>&nbsp;'); 
+                container.append('<button id="btnEditar" type="button" class="btn btn-warning" ><i class="fa fa-remove"></i>&nbsp;Editar</button>&nbsp;'); 
                 //container.append('<button id="btnEliminar" type="button" class="btn btn-danger" ><i class="fa fa-remove"></i>&nbsp;Eliminar</button>&nbsp;'); 
 				//container.append('<button id="btnImprimir" type="button" class="btn" ><i class="fa-print"></i>&nbsp;Imprimir</button>&nbsp;');
 				container.append('<button id="btnImprimirLista" type="button" class="btn btn-success" ><i class="fa fa-print"></i>&nbsp;Imprimir Lista</button>&nbsp;'); 
 				
 				$("#btnNuevo").on('click', function () {
-					Abrir_Popup_Nuevo_Comprobante_Venta();
+					var accion = "0";
+					var idCabeceraFB = "0";
+					$("#containerMain").load('ventas/factura_boleta/cabeceraFacturaBoleta'+".php?p="+Math.random(), {accion:accion, idCabeceraFB: idCabeceraFB} );
 					//Ir_A_Pagina('ventas/factura_boleta/cabeceraFacturaBoleta');
 				});
-				/*
+				
 				$("#btnEditar").on('click', function () {
-				    Abrir_Popup_Nuevo_Comprobante_Venta('1');
+					var accion = "1";
+					var idCabeceraFB = Obtener_Comprobante_Venta_Fila();					
+					
+					if(idCabeceraFB == "0"){
+						alert("No ha seleccionado una fila");
+						return false;
+					}
+					$("#containerMain").load('ventas/factura_boleta/cabeceraFacturaBoleta'+".php?p="+Math.random(), {accion: accion, idCabeceraFB: idCabeceraFB} );
+				    //Ir_A_Pagina_Con_Parametros('ventas/factura_boleta/cabeceraFacturaBoleta', parametros);
 				});
-                
+                /*
                 $("#btnEliminar").on('click', function () {
 					Eliminar_Comprobante_Venta();
 				});
@@ -126,19 +134,18 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
 				});
 			},	
             ready: function () {
-                $("#jqxGridListaFacturaBoleta").jqxGrid('hidecolumn', 'idFacturaBoleta');
+                $("#jqxGridListaFacturaBoleta").jqxGrid('hidecolumn', 'idCabeceraFB');
             },
 			columns: [
-				{ text: 'ID', datafield: 'idFacturaBoleta', width: '0%'},
-				{ text: 'Comprobante', datafield: 'comprobante', width: '10%'},
+				{ text: 'ID', datafield: 'idCabeceraFB', width: '0%'},
+				{ text: 'Fecha Emision', datafield: 'fechaEmision', width: '10%', cellsalign: 'center', cellsformat: 'dd/MM/yyyy' },
 				{ text: 'Serie-Numero', datafield: 'serieNumero', width: '10%'},
-				{ text: 'Fecha', datafield: 'fechaEmision', width: '10%', cellsalign: 'center', cellsformat: 'dd/MM/yyyy' },
-				{ text: 'Cliente', datafield: 'cliente', width: '30%'},
-				{ text: 'Documento', datafield: 'documentoIdentidad', width: '10%'},
-				{ text: 'Nro Doc.', datafield: 'nroDocumentoIdentidad', width: '10%'},
-				{ text: 'Moneda', datafield: 'moneda', width: '8%'},
-				{ text: 'Total Venta', datafield: 'totalVenta', width: '12%', cellsalign: 'right', cellsformat: 'd2' },
-				{ text: 'Estado', datafield: 'estado', width: '10%'}
+				{ text: 'Comprobante', datafield: 'comprobante', width: '10%'},
+				{ text: 'Cliente', datafield: 'cliente', width: '40%'},
+				{ text: 'Forma Pago', datafield: 'formaPago', width: '10%'},
+				{ text: 'Moneda', datafield: 'moneda', width: '10%'},
+				{ text: 'Total Venta', datafield: 'totalVenta', width: '10%'}
+				//{ text: 'Estado', datafield: 'estado', width: '6%'}
 			]
 		});
 		
@@ -159,12 +166,12 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
         });
 		
         //TestLista();
-        
+
 	});
 
 
 	$("#popupFacturaBoletaDiv").jqxWindow({
-		width: "350", height:"220", resizable: false,  isModal: true, autoOpen: false, okButton: $('#btnAceptar'), 
+		width: "350", height:"220", resizable: false,  isModal: true, autoOpen: false, okButton: $('#btnAceptar'),
 		cancelButton: $("#btnCancelar"), modalOpacity: 0.25
 	});
 	
@@ -194,42 +201,42 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
 	}
 
     function Obtener_Comprobante_Venta_Fila(){
-        var idFacturaBoleta = "0";
+        var idCabeceraFB = "0";
 		var rowscount = $("#jqxGridListaFacturaBoleta").jqxGrid('getdatainformation').rowscount;
 		var selectedrowindex = $("#jqxGridListaFacturaBoleta").jqxGrid('getselectedrowindex');
 		if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
 			var id = $("#jqxGridListaFacturaBoleta").jqxGrid('getrowid', selectedrowindex);
 			var dataListaFacturaBoleta = $("#jqxGridListaFacturaBoleta").jqxGrid('getrowdata', selectedrowindex);
-            idFacturaBoleta = dataListaFacturaBoleta.idFacturaBoleta;
+            idCabeceraFB = dataListaFacturaBoleta.idCabeceraFB;
 		}
         
-        return idFacturaBoleta;
+        return idCabeceraFB;
     }
     
     function Eliminar_Comprobante_Venta(){
-        var idFacturaBoleta = Obtener_Comprobante_Venta_Fila();
-        if(idFacturaBoleta == "0"){
+        var idCabeceraFB = Obtener_Comprobante_Venta_Fila();
+        if(idCabeceraFB == "0"){
             alert("No ha seleccionado una fila");
             return false;
         }
         
-        if(!confirm(" Esta seguro de eliminar al facturaBoleta ?")){
+        if(!confirm(" Esta seguro de eliminar al factura_boleta ?")){
             return false;
         }
         
         $.ajax({
 			type: "POST",
 			url : "ventas/factura_boleta/deleteFacturaBoleta.php?p="+Math.random(),
-			data : { idFacturaBoleta: idFacturaBoleta },
+			data : { idCabeceraFB: idCabeceraFB },
 			success: function(result){
                
 				if(result == 1){
-					alert("Se elimino al facturaBoleta satisfactoriamente" );
+					alert("Se elimino al factura_boleta satisfactoriamente" );
                     
 					$("#jqxGridListaFacturaBoleta").jqxGrid('updatebounddata', 'cells');
   
 				}else{
-                    alert("Ocurrio un error al grabar al facturaBoleta");
+                    alert("Ocurrio un error al grabar al factura_boleta");
 				}
 				
 			},
@@ -241,35 +248,33 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
     }
 
 	
-   	function Imprimir(idFacturaBoleta){
+   	function Imprimir(idCabeceraFB){
 		
-		var newWindow = window.open("ventas/factura_boleta/impresionFacturaBoleta.php?idFacturaBoleta="+idFacturaBoleta,
+		var newWindow = window.open("ventas/factura_boleta/impresionFacturaBoleta.php?idCabeceraFB="+idCabeceraFB,
 									"sub","HEIGHT=200,WIDTH=200,SCROLLBARS");
 		
 		newWindow.print();
 	}
 	
-	
-    
+	/*
 	function TestLista(){
 	
 		var filtro = {
             fechaDesde: $.trim($("#fechaDesde").val()),
 			fechaHasta: $.trim($("#fechaHasta").val()),
-			idComprobante: $.trim($("#cboComprobanteFiltro").val()),
 			serieNumero: $.trim($("#serieNumeroFiltro").val()),
 			cliente: $.trim($("#clienteFiltro").val())
         };
 		
 		$('#debug').html(filtro);
         console.log(filtro);
-		
+		console.log("*********************");
 		$.ajax({
 			type: "POST",            
 			url: "ventas/factura_boleta/dataListaFacturaBoleta.php?p="+Math.random(),
 			data: { filtro: filtro },
 			success: function(result){
-				alert(result);
+				//alert(result);
 				$('#debug').html(result);
         		console.log(result);
 				
@@ -279,7 +284,7 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
 			}
 		})	
 	}
-	
+	*/
 		
-	
+
 </script>
