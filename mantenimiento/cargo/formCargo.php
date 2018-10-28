@@ -125,12 +125,12 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
         var idCargo = $.trim($("#idCargo").val());        
         
         if($.trim($("#codigo").val())==""){
-            alert("Debe ingresar el codigo");
+            Mostrar_Mensaje_Notificacion("warning","Debe ingresar el codigo");
             $("#codigo").focus();
             return false;
         }
         if($.trim($("#cargo").val())==""){
-            alert("Debe ingresar la cargo");
+			 Mostrar_Mensaje_Notificacion("warning","Debe ingresar el cargo");
             $("#cargo").focus();
             return false;
         }
@@ -160,21 +160,19 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
 			     //alert(result);
                 
                 if(result == 1){
-					alert("Se grabaron los datos del cargo satisfactoriamente" );
-                    
+                    Mostrar_Mensaje_Notificacion("success","Se grabaron los datos del cargo satisfactoriamente");
 					$("#jqxGridListaCargo").jqxGrid('updatebounddata', 'cells');
                     Cerrar_Popup_Cargo();
 				}else{
                     if(result == 2){
-                        alert("La cargo ya existe" );
-                    }else{
-                        alert("Ocurrio un error al grabar la cargo");
+						Mostrar_Mensaje_Notificacion("success","El cargo ya existe");
+                    }else{ 
+						Mostrar_Mensaje_Notificacion("error","Se ha producido un error. No puede continuar con el proceso.");
                     }
 				}
 			
 			},
-			error: function(){
-				alert("Se ha producido un error. No puede continuar con el proceso.");
+			error: function(){ Mostrar_Mensaje_Notificacion("error","Se ha producido un error. No puede continuar con el proceso.");
 			}
 		});
         

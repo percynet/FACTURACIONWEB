@@ -21,7 +21,8 @@ class DBsp
 		$this->dbSP['linkConex'] = mysqli_connect($this->dbSP['host'],$this->dbSP['user'],$this->dbSP['pass'], $this->dbSP['dbas']);
 		
 		if (!$this->dbSP['linkConex']){
- 			$errno = mysql_errno().": ".mysql_error();
+ 			//$errno = mysql_errno().": ".mysql_error();
+			$errno = mysqli_connect_errno().": ".mysqli_connect_error();
  			$this->dbSP['connection'] = false;
 	  	    $this->dbSP['error'] = "Error conectando a la base de datos (".$errno.")";
 	 		return(false);
@@ -310,169 +311,106 @@ class DBsp
      	return $result;
    	}
 
-
-
 /*---------------------------------------------------------------------------*/
 
-
-
-
-/*---------------------------------------------------------------------------*/
-
-
-
-/*---------------------------------------------------------------------------*/
-
-
-
-/*---------------------------------------------------------------------------*/
-
-
-	function execSP_InsertCalidad($calidad){
-       	$sel_query = " CALL sp_insert_calidad( '".
-                        $calidad['idEmpresa']."','".
-                        $calidad['calidad']."','".
-						$calidad['idUsuario']."' ) ";
+	function execSP_InsertCabeceraNota($cabecera){
+       	$sel_query = " CALL sp_insert_cabecera_nota( '".
+						$cabecera['idEmpresa']."','".
+						$cabecera['idTipoNota']."','".
+						$cabecera['tipoNota']."','".
+						$cabecera['fechaEmision']."','".
+						$cabecera['idComprobantePagoRef']."','".
+						$cabecera['comprobantePagoRef']."','".
+						$cabecera['serieNumeroCPRef']."','".
+						$cabecera['fechaEmisionCPRef']."','".						
+						$cabecera['idCliente']."','".
+						$cabecera['cliente']."','".
+						$cabecera['documentoIdentidad']."','".
+						$cabecera['numeroDocumentoIdentidad']."','".
+						$cabecera['idDireccionActual']."','".
+						$cabecera['direccionActual']."','".
+						$cabecera['idMotivoNota']."','".
+						$cabecera['motivoNota']."','".
+						$cabecera['idMoneda']."','".
+						$cabecera['moneda']."','".			
+						$cabecera['totalImporte']."','".
+						$cabecera['totalIGV']."','".
+						$cabecera['totalVenta']."','".
+						$cabecera['idUsuario']."' ) ";
 						
-        //echo "***query:".$sel_query;
+        //echo "query:".$sel_query;		
        	$result = mysqli_query($this->dbSP['linkConex'], $sel_query);
-     	return $result;
-   	}	
-	
-	function execSP_UpdateCalidad($calidad){
-       	$sel_query = " CALL sp_update_calidad( '".
-                        $calidad['idEmpresa']."','".
-                        $calidad['idCalidad']."','".
-                        $calidad['calidad']."','".
-                        $calidad['idEstado']."','".
-						$calidad['idUsuario']."' ) ";
-						
-        //echo "***query:".$sel_query;		
-       	$result = mysqli_query($this->dbSP['linkConex'], $sel_query);		
-     	return $result;
-   	}	
-	
-	function execSP_DeleteCalidad($idEmpresa, $idCalidad, $idUsuario){
-       	$sel_query = " CALL sp_delete_calidad( '".
-                        $idEmpresa."','".
-                        $idCalidad."','".
-						$idUsuario."' ) ";
-						
-        //echo "***query:".$sel_query;		
-       	$result = mysqli_query($this->dbSP['linkConex'], $sel_query);		
      	return $result;
    	}
 	
-/*---------------------------------------------------------------------------*/
 
-	function execSP_InsertColor($color){
-       	$sel_query = " CALL sp_insert_color( '".
-                        $color['idEmpresa']."','".
-                        $color['color']."','".
-						$color['idUsuario']."' ) ";
+	function execSP_InsertDetalleNota($detalle){
+       	$sel_query = " CALL sp_insert_detalle_nota( '".
+                        $detalle['idEmpresa']."','".
+						$detalle['idCabeceraNota']."','".
+						$detalle['descripcion']."','".
+						$detalle['importe']."','".
+						$detalle['idUsuario']."' ) ";
 						
         //echo "***query:".$sel_query;
        	$result = mysqli_query($this->dbSP['linkConex'], $sel_query);
-     	return $result;
-   	}	
-	
-	function execSP_UpdateColor($color){
-       	$sel_query = " CALL sp_update_color( '".
-                        $color['idEmpresa']."','".
-                        $color['idColor']."','".
-                        $color['color']."','".
-                        $color['idEstado']."','".
-						$color['idUsuario']."' ) ";
-						
-        //echo "***query:".$sel_query;		
-       	$result = mysqli_query($this->dbSP['linkConex'], $sel_query);		
-     	return $result;
-   	}	
-	
-	function execSP_DeleteColor($idEmpresa, $idColor, $idUsuario){
-       	$sel_query = " CALL sp_delete_color( '".
-                        $idEmpresa."','".
-                        $idColor."','".
-						$idUsuario."' ) ";
-						
-        //echo "***query:".$sel_query;		
-       	$result = mysqli_query($this->dbSP['linkConex'], $sel_query);		
-     	return $result;
-   	}
-	
-/*---------------------------------------------------------------------------*/
-
-	function execSP_InsertMarca($marca){
-       	$sel_query = " CALL sp_insert_marca( '".
-                        $marca['idEmpresa']."','".
-                        $marca['marca']."','".
-						$marca['idUsuario']."' ) ";
-						
-        //echo "***query:".$sel_query;
-       	$result = mysqli_query($this->dbSP['linkConex'], $sel_query);
-     	return $result;
-   	}	
-	
-	function execSP_UpdateMarca($marca){
-       	$sel_query = " CALL sp_update_marca( '".
-                        $marca['idEmpresa']."','".
-                        $marca['idMarca']."','".
-                        $marca['marca']."','".
-                        $marca['idEstado']."','".
-						$marca['idUsuario']."' ) ";
-						
-        //echo "***query:".$sel_query;		
-       	$result = mysqli_query($this->dbSP['linkConex'], $sel_query);		
-     	return $result;
-   	}	
-	
-	function execSP_DeleteMarca($idEmpresa, $idMarca, $idUsuario){
-       	$sel_query = " CALL sp_delete_marca( '".
-                        $idEmpresa."','".
-                        $idMarca."','".
-						$idUsuario."' ) ";
-						
-        //echo "***query:".$sel_query;		
-       	$result = mysqli_query($this->dbSP['linkConex'], $sel_query);		
+		//print_r($result);
+		
+		if ($result){
+			mysqli_query($this->dbSP['linkConex'],"COMMIT");
+	  	}else{
+			mysqli_query($this->dbSP['linkConex'],"ROLLBACK");
+		}
+		
      	return $result;
    	}
 
-/*---------------------------------------------------------------------------*/
 
-	function execSP_InsertModelo($modelo){
-       	$sel_query = " CALL sp_insert_modelo( '".
-                        $modelo['idEmpresa']."','".
-                        $modelo['idMarca']."','".
-                        $modelo['modelo']."','".
-						$modelo['idUsuario']."' ) ";
+	function execSP_UpdateCabeceraNota($cabecera){
+       	$sel_query = " CALL sp_update_cabecera_nota( '".
+						$cabecera['idEmpresa']."','".
+						$cabecera['idCabeceraNota']."','".
+						$cabecera['idComprobantePagoRef']."','".
+						$cabecera['comprobantePagoRef']."','".
+						$cabecera['serieNumeroCPRef']."','".
+						$cabecera['fechaEmisionCPRef']."','".						
+						$cabecera['idCliente']."','".
+						$cabecera['cliente']."','".
+						$cabecera['documentoIdentidad']."','".
+						$cabecera['numeroDocumentoIdentidad']."','".
+						$cabecera['idDireccionActual']."','".
+						$cabecera['direccionActual']."','".
+						$cabecera['idMotivoNota']."','".
+						$cabecera['motivoNota']."','".
+						$cabecera['idMoneda']."','".
+						$cabecera['moneda']."','".			
+						$cabecera['totalImporte']."','".
+						$cabecera['totalIGV']."','".
+						$cabecera['totalVenta']."','".
+						$cabecera['idUsuario']."' ) ";
 						
         //echo "***query:".$sel_query;
        	$result = mysqli_query($this->dbSP['linkConex'], $sel_query);
      	return $result;
-   	}	
+   	}
 	
-	function execSP_UpdateModelo($modelo){
-       	$sel_query = " CALL sp_update_modelo( '".
-                        $modelo['idEmpresa']."','".                        
-					 	$modelo['idModelo']."','".
-						$modelo['idMarca']."','".
-                        $modelo['modelo']."','".
-                        $modelo['idEstado']."','".
-						$modelo['idUsuario']."' ) ";
-						
-        //echo "***query:".$sel_query;		
-       	$result = mysqli_query($this->dbSP['linkConex'], $sel_query);		
-     	return $result;
-   	}	
 	
-	function execSP_DeleteModelo($idEmpresa, $idModelo, $idUsuario){
-       	$sel_query = " CALL sp_delete_modelo( '".
-                        $idEmpresa."','".
-                        $idModelo."','".
-						$idUsuario."' ) ";
+	function execSP_DeleteDetalleNota($detalle){
+       	$sel_query = " CALL sp_delete_detalle_nota( '".
+                        $detalle['idEmpresa']."','".
+						$detalle['idCabeceraNota']."','".
+						$detalle['idUsuario']."' ) ";
 						
-        //echo "***query:".$sel_query;		
-       	$result = mysqli_query($this->dbSP['linkConex'], $sel_query);		
+        //echo "***query:".$sel_query;
+       	$result = mysqli_query($this->dbSP['linkConex'], $sel_query);
+		//print_r($result);
+		
+		if ($result){
+			mysqli_query($this->dbSP['linkConex'],"COMMIT");
+	  	}else{
+			mysqli_query($this->dbSP['linkConex'],"ROLLBACK");
+		}
+		
      	return $result;
    	}
 	
@@ -567,61 +505,8 @@ class DBsp
         //echo "***query:".$sel_query;		
        	$result = mysqli_query($this->dbSP['linkConex'], $sel_query);		
      	return $result;
-   	}
-		
-/*---------------------------------------------------------------------------*/
+	}
 
-	function execSP_InsertAgencia($agencia){
-       	$sel_query = " CALL sp_insert_agencia( '".
-                        $agencia['idEmpresa']."','".
-                        $agencia['agencia']."','".
-						$agencia['direccion']."','".
-						$agencia['ruc']."','".
-						$agencia['telefonoFijo']."','".
-						$agencia['telefonoCelular']."','".
-						$agencia['idUsuario']."' ) ";
-						
-        //echo "***query:".$sel_query;
-       	$result = mysqli_query($this->dbSP['linkConex'], $sel_query);
-     	return $result;
-   	}	
-	
-	function execSP_UpdateAgencia($agencia){
-       	$sel_query = " CALL sp_update_agencia( '".
-                        $agencia['idEmpresa']."','".
-                        $agencia['idAgencia']."','".
-                        $agencia['agencia']."','".
-						$agencia['direccion']."','".
-						$agencia['ruc']."','".
-						$agencia['telefonoFijo']."','".
-						$agencia['telefonoCelular']."','".
-                        $agencia['idEstado']."','".
-						$agencia['idUsuario']."' ) ";
-						
-        //echo "***query:".$sel_query;
-       	$result = mysqli_query($this->dbSP['linkConex'], $sel_query);
-     	return $result;
-   	}	
-	
-	function execSP_DeleteAgencia($idEmpresa, $idAgencia, $idUsuario){
-       	$sel_query = " CALL sp_delete_agencia( '".
-                        $idEmpresa."','".
-                        $idAgencia."','".
-						$idUsuario."' ) ";
-						
-        //echo "***query:".$sel_query;		
-       	$result = mysqli_query($this->dbSP['linkConex'], $sel_query);		
-     	return $result;
-   	}
-	
-/*---------------------------------------------------------------------------*/
-
-	function execSP_Test(){
-       	$sel_query = " CALL SP_test() ";
-        //echo "query:".$sel_query;
-       	$result = mysqli_query($this->dbSP['linkConex'], $sel_query);
-     	return $result;
-   	}
 	
 /*---------------------------------------------------------------------------*/
 	
@@ -771,6 +656,79 @@ class DBsp
 
 /*---------------------------------------------------------------------------*/
 
+/* Tabla de Tranportista */
+	function execSP_InsertTransportista($transportista){
+       	$sel_query = " CALL sp_insert_transportista( '".
+                        $transportista['idEmpresa']."','".
+                        $transportista['codigo']."','".                       
+                        $transportista['ruc']."','".
+						$transportista['razonSocial']."','".
+						$transportista['idUsuario']."' ) ";
+						
+        //echo "***query:".$sel_query;
+       	$result = mysqli_query($this->dbSP['linkConex'], $sel_query);
+     	return $result;
+   	}	
+	
+	function execSP_UpdateTransportista($transportista){
+       	$sel_query = " CALL sp_update_transportista( '".
+                        $transportista['idEmpresa']."','".
+                        $transportista['idTransportista']."','".
+                        $transportista['codigo']."','".
+						$transportista['ruc']."','".
+                        $transportista['razonSocial']."','".                        
+                        $transportista['idEstado']."','".
+						$transportista['idUsuario']."' ) ";
+						
+        //echo "***query:".$sel_query;		
+       	$result = mysqli_query($this->dbSP['linkConex'], $sel_query);		
+     	return $result;
+   	}	
+	
+	function execSP_DeleteTransportista($idEmpresa, $idTransportista, $idUsuario){
+       	$sel_query = " CALL sp_delete_transportista( '".
+                        $idEmpresa."','".
+                        $idTransportista."','".
+						$idUsuario."' ) ";
+						
+        //echo "***query:".$sel_query;		
+       	$result = mysqli_query($this->dbSP['linkConex'], $sel_query);		
+     	return $result;
+   	}
+
+
+
+/*---------------------------------------------------------------------------*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*---------------------------------------------------------------------------*/
+	/*
 	function execSP_InsertCabeceraComprobanteVenta($cabecera){
        	$sel_query = " CALL sp_insert_cabecera_comprobante_venta( '".
                         $cabecera['idEmpresa']."','".
@@ -796,60 +754,10 @@ class DBsp
        	$result = mysqli_query($this->dbSP['linkConex'], $sel_query);
      	return $result;
    	}
+	*/
+
 	
 /*---------------------------------------------------------------------------*/
-
-	function execSP_GeneraSerieNumeroCabeceraComprobanteVenta($cabecera){
-       	$sel_query = " CALL sp_generar_serie_numero_documento( '".
-                        $cabecera['idEmpresa']."','".
-                        $cabecera['idComprobanteVenta']."','".
-						$cabecera['comprobante']."','".
-						$cabecera['idUsuario']."' ) ";
-						
-        //echo "***query:".$sel_query;
-       	$result = mysqli_query($this->dbSP['linkConex'], $sel_query);
-     	return $result;
-   	}	
-
-/*---------------------------------------------------------------------------*/
-	
-	function execSP_InsertDetalleComprobanteVenta($values){
-       	$sel_query = " CALL sp_insert_detalle_comprobante_venta ".$values;
-						
-        //echo "***query:".$sel_query;
-       	$result = mysqli_query($this->dbSP['linkConex'], $sel_query);
-     	return $result;
-   	}
-
-/*---------------------------------------------------------------------------*/
-
-	function execSP_GenerarGuiaRemision($cabecera){
-       	$sel_query = " CALL sp_generar_guia_remision ( '".
-                        $cabecera['idEmpresa']."','".
-                        $cabecera['idComprobante']."','".
-						$cabecera['comprobante']."','".
-						$cabecera['fechaEmision']."','".
-						$cabecera['idComprobanteVenta']."','".
-						$cabecera['idAlmacen']."','".
-						$cabecera['idCliente']."','".
-						$cabecera['cliente']."','".
-						$cabecera['nroDocumentoIdentidadCliente']."','".
-						$cabecera['direccionCliente']."','".
-						$cabecera['idAgencia']."','".
-						$cabecera['agencia']."','".
-						$cabecera['rucAgencia']."','".
-						$cabecera['direccionAgencia']."','".
-						$cabecera['marcaPlaca']."','".
-						$cabecera['nroConstanciaInscripcion']."','".
-						$cabecera['nroLicenciasConducir']."','".
-						$cabecera['idMotivoTraslado']."','".
-						$cabecera['motivoTraslado']."','".
-						$cabecera['idUsuario']."' ) ";
-						
-        //echo "***query:".$sel_query;
-       	$result = mysqli_query($this->dbSP['linkConex'], $sel_query);
-     	return $result;
-   	}
 
     /*
 	function execSP_InsertEmpleado($empleado, $idUsuario){
@@ -926,220 +834,8 @@ class DBsp
         //echo "***query:".$sel_query;		
        	$result = mysqli_query($this->dbSP['linkConex'], $sel_query);
      	return $result;
-   	}		
-	
-	
-	function execSP_InsertCabeceraNotaPedido($idEmpresa, $notaPedido, $idUsuario){
-       	$sel_query = " CALL sp_insert_cabecera_nota_pedido( '".
-						$idEmpresa."','".
-						$notaPedido['idPeriodo']."','".
-						$notaPedido['fechaFacturacion']."','".
-						$notaPedido['idAlmacen']."','".
-						$notaPedido['idCliente']."','".
-						$notaPedido['idVendedor']."','".
-						$notaPedido['idDepartamento']."','".
-						$notaPedido['idProvincia']."','".
-						$notaPedido['idDistrito']."','".
-						$notaPedido['idZona']."','".
-						$notaPedido['idRuta']."','".
-						$notaPedido['nroSegmento']."','".
-						$notaPedido['idFormaPago']."','".
-						$notaPedido['idComprobante']."','".
-						$notaPedido['idMoneda']."','".
-						$notaPedido['idGenerarGR']."','".
-						$notaPedido['tipoCambio']."','".
-						$notaPedido['totalImporte']."','".
-						$notaPedido['totalIGV']."','".
-						$notaPedido['totalImpuesto']."','".
-						$notaPedido['totalDescuento']."','".
-						$notaPedido['totalVenta']."','".
-						$idUsuario."' ) ";
-						
-        //echo "query:".$sel_query;		
-       	$result = mysqli_query($this->dbSP['linkConex'], $sel_query);
-     	return $result;
-   	}
-	
-	function execSP_InsertDetalleNotaPedido($values){
-		$rsx = mysql_query("START TRANSACTION"); 
-       	$sel_query = " CALL sp_insert_detalle_nota_pedido ".$values;
-						
-        //echo "query:".$sel_query;		
-       	$result = mysqli_query($this->dbSP['linkConex'], $sel_query);
-		if ($result){
-			$rsx = mysql_query("COMMIT");
-	  	}else{
-			$rsx = mysql_query("ROLLBACK");
-		}
-     	return $result;
-   	}
-
-	
-	function execSP_EjecutarAccionNotaPedido($idEmpresa, $idNotaPedido, $accion, $idUsuario){
-       	$sel_query = " CALL sp_ejecutar_accion_nota_pedido( ".
-						$idEmpresa.",".
-						$idNotaPedido.",'".
-						$accion."',".
-						$idUsuario." ) ";
-						
-        //echo "query:".$sel_query;		
-       	$result = mysqli_query($this->dbSP['linkConex'], $sel_query);
-     	return $result;
-   	}
-	
-	
-	function execSP_EjecutarAccionComprobanteVenta($idEmpresa, $idComprobanteVenta, $accion, $idUsuario){
-       	$sel_query = " CALL sp_ejecutar_accion_comprobante_venta( ".
-						$idEmpresa.",".
-						$idComprobanteVenta.",'".
-						$accion."',".
-						$idUsuario." ) ";
-						
-        //echo "query:".$sel_query;		
-       	$result = mysqli_query($this->dbSP['linkConex'], $sel_query);
-     	return $result;
-   	}
 	
 
-	function execSP_EjecutarAccionGuiaRemision($idEmpresa, $idGuiaRemision, $accion, $idUsuario){
-       	$sel_query = " CALL sp_ejecutar_accion_guia_remision( ".
-						$idEmpresa.",".
-						$idGuiaRemision.",'".
-						$accion."',".
-						$idUsuario." ) ";
-						
-        //echo "query:".$sel_query;		
-       	$result = mysqli_query($this->dbSP['linkConex'], $sel_query);
-     	return $result;
-   	}	
-
-	function execSP_EjecutarAccionCuentaXCobrar($idEmpresa, $idCuentaXCobrar, $accion, $idUsuario){
-       	$sel_query = " CALL sp_ejecutar_accion_cuenta_x_cobrar( ".
-						$idEmpresa.",".
-						$idCuentaXCobrar.",'".
-						$accion."',".
-						$idUsuario." ) ";
-						
-        //echo "query:".$sel_query;		
-       	$result = mysqli_query($this->dbSP['linkConex'], $sel_query);
-     	return $result;
-   	}	
-		
-	function execSP_InsertRutaEmpleado($rutaEmpleado, $idUsuario){
-       	$sel_query = " CALL sp_insert_ruta_empleado( '".
-							$rutaEmpleado['idEmpresa']."','".
-                            $rutaEmpleado['idDepartamento']."','".
-                            $rutaEmpleado['idProvincia']."','".
-                            $rutaEmpleado['idDistrito']."','".
-							$rutaEmpleado['idZona']."','".
-                            $rutaEmpleado['idRuta']."','".
-							$rutaEmpleado['idTipoEmpleado']."','".
-							$rutaEmpleado['idCargo']."','".
-							$rutaEmpleado['idEmpleado']."','".
-                            $idUsuario."')";
-						
-        //echo "***query:".$sel_query;		
-       	$result = mysqli_query($this->dbSP['linkConex'], $sel_query);		
-     	return $result;
-   	}	
-	
-	
-	function execSP_DeleteRutaEmpleado($rutaEmpleado, $idUsuario){
-       	$sel_query = " CALL sp_delete_ruta_empleado( '".
-							$rutaEmpleado['idEmpresa']."','".
-							$rutaEmpleado['idRutaEmpleado']."','".
-                            $idUsuario."')";
-						
-        //echo "***query:".$sel_query;		
-       	$result = mysqli_query($this->dbSP['linkConex'], $sel_query);		
-     	return $result;
-   	}		
-	
-	
-	function execSP_CrearPeriodo($idEmpresa, $idUsuario){
-       	$sel_query = " CALL sp_insert_periodo( '".
-							$idEmpresa."','".
-                            $idUsuario."')";
-													
-        //echo "***query:".$sel_query;
-       	$result = mysqli_query($this->dbSP['linkConex'], $sel_query);
-     	return $result;
-   	}	
-	
-	function execSP_CerrarPeriodo($idEmpresa, $idPeriodo, $idUsuario){
-       	$sel_query = " CALL sp_cerrar_periodo( '".
-							$idEmpresa."','".
-							$idPeriodo."','".
-                            $idUsuario."')";
-													
-        //echo "***query:".$sel_query;		
-       	$result = mysqli_query($this->dbSP['linkConex'], $sel_query);
-     	return $result;
-   	}
-	
-	function execSP_CerrarOperacionDia($idEmpresa, $idOperacionDia, $fechaOperacionDiaNew, $idUsuario){
-       	$sel_query = " CALL sp_cerrar_operacion_dia( '".
-							$idEmpresa."','".
-							$idOperacionDia."','".
-							$fechaOperacionDiaNew."','".
-                            $idUsuario."')";
-													
-        //echo "***query:".$sel_query;		
-       	$result = mysqli_query($this->dbSP['linkConex'], $sel_query);
-     	return $result;
-   	}
-	
-	
-	function execSP_InsertDetalleCuentaXCobrar($idEmpresa, $detalleCuentaXCobrar, $idUsuario){
-       	$sel_query = " CALL sp_insert_detalle_cuenta_x_cobrar( '".
-						$idEmpresa."','".
-						$detalleCuentaXCobrar['idCuentaXCobrar']."','".
-						$detalleCuentaXCobrar['fechaPago']."','".
-						$detalleCuentaXCobrar['idMedioPago']."','".
-						$detalleCuentaXCobrar['medioPago']."','".
-						$detalleCuentaXCobrar['numeroDocumentoPago']."','".
-						$detalleCuentaXCobrar['idMoneda']."','".
-						$detalleCuentaXCobrar['moneda']."',".
-						$detalleCuentaXCobrar['montoPago'].",'".
-						$idUsuario."' ) ";
-						
-        //echo "query:".$sel_query;		
-       	$result = mysqli_query($this->dbSP['linkConex'], $sel_query);
-     	return $result;
-   	}	
-
-	function execSP_UpdateGuiaRemision($idEmpresa, $guiaRemision, $idUsuario){
-       	$sel_query = " CALL sp_update_cabecera_guia_remision( '".
-						$idEmpresa."','".
-						$guiaRemision['idGuiaRemision']."','".
-						$guiaRemision['idMotivoTraslado']."','".
-						$guiaRemision['motivoTraslado']."','".
-						$guiaRemision['idTransportista']."','".
-						$guiaRemision['transportista']."','".
-						$guiaRemision['marca']."','".
-						$guiaRemision['placa']."','".
-						$guiaRemision['fechaTraslado']."','".
-						$idUsuario."' ) ";
-						
-        //echo "query:".$sel_query;		
-       	$result = mysqli_query($this->dbSP['linkConex'], $sel_query);
-     	return $result;
-   	}
-	
-	
-	function execSP_UpdateProductoAlmacen($values){
-		$rsx = mysql_query("START TRANSACTION"); 
-       	$sel_query = " CALL sp_update_producto_almacen ".$values;
-						
-        //echo "query:".$sel_query;		
-       	$result = mysqli_query($this->dbSP['linkConex'], $sel_query);
-		if ($result){
-			$rsx = mysql_query("COMMIT");
-	  	}else{
-			$rsx = mysql_query("ROLLBACK");
-		}
-     	return $result;
-   	}	
 	*/
 	
 }

@@ -109,7 +109,8 @@ class DBSql
         
         $sel_query = " SELECT US.idUsuario, ES.estado";
         $sel_query.= " FROM usuario US INNER JOIN estado ES ON (US.idEstado = ES.idEstado) ";
-        $sel_query.= " WHERE US.usuario = '".strtoupper($usuario)."' ".$sel_where;
+        $sel_query.= " WHERE LOWER(US.usuario) = '".strtolower($usuario)."' ".$sel_where;
+		//$sel_query.= " WHERE US.usuario = '".strtoupper($usuario)."' ".$sel_where;
         //echo "sel_query:".$sel_query;
         $result = mysql_query($sel_query);
         return $result;
@@ -123,7 +124,8 @@ class DBSql
         //$sel_query = " SELECT idEmpresa, idUsuario, usuario, idRol, rol, idEmpleado, codigoEmpleado, nombresApellidos ";
 		$sel_query = " SELECT * ";
         $sel_query.= " FROM vw_usuario ";
-        $sel_query.= " WHERE usuario = '".strtoupper($usuario)."' AND passwd = '".strtoupper($passwd)."' AND estado = 'ACTIVO' ".$sel_where;
+        $sel_query.= " WHERE LOWER(usuario) = '".strtolower($usuario)."' AND passwd = MD5('".strtolower($passwd)."') AND estado = 'ACTIVO' ".$sel_where;
+		//$sel_query.= " WHERE usuario = '".strtoupper($usuario)."' AND passwd = '".strtoupper($passwd)."' AND estado = 'ACTIVO' ".$sel_where;
         //echo "sel_query:".$sel_query;
         $result = mysql_query($sel_query);
         return $result;
@@ -186,6 +188,14 @@ class DBSql
         //echo "query:".$sel_query;
        	$result = mysql_query($sel_query);
      	return $result;
+   	}	
+	
+   	function sqlFiltrarEstado($tipoEstado){
+       	$sel_query = " SELECT * ";
+		$sel_query.= " FROM vw_estado WHERE tipoEstado = '".$tipoEstado."' ";
+
+       	$result = mysql_query($sel_query);
+     	return $result;		
    	}	
 		
     /*-------------------------MAESTROS-----------------------------------------------------------------*/
@@ -493,7 +503,7 @@ class DBSql
         //echo "query:".$sel_query;
        	$result = mysql_query($sel_query);
      	return $result;
-   	}	
+   	}
 	
  /*--------------------------------------------------------------------------------------------------*/
 
@@ -512,18 +522,26 @@ class DBSql
 
  /*--------------------------------------------------------------------------------------------------*/
 	
-    function sqlListaMotivoTraslado($idEmpresa, $estado){
-        $where = "";
-        if($estado != ""){
-            $where = "  AND estado = '".$estado."' ";
-        }
-        
-       	$sel_query = " SELECT * FROM vw_motivo_traslado mt ";
-        $sel_query.= " WHERE idEmpresa = '".$idEmpresa."' ".$where;
+    function sqlListaMotivoNota($idEmpresa){
+        $sel_query = " SELECT idRegistroTabla as idMotivoNota, descripcion as motivoNota FROM vw_registro_tabla ";
+        $sel_query.= " WHERE idEmpresa = '".$idEmpresa."' AND nombreTabla = 'motivo_nota' ";
+        //echo "query:".$sel_query;
+       	$result = mysql_query($sel_query);
+     	return $result;
+	}
+	
+/*--------------------------------------------------------------------------------------*/
+
+    function sqlListaTipoNota($idEmpresa){
+       	$sel_query = " SELECT idRegistroTabla as idTipoNota, descripcion as tipoNota FROM vw_registro_tabla ";
+        $sel_query.= " WHERE idEmpresa = '".$idEmpresa."' AND nombreTabla = 'tipo_nota' ";
         //echo "query:".$sel_query;
        	$result = mysql_query($sel_query);
      	return $result;
    	}	
+	
+	
+	
 
  	/*--------------------------------------------------------------------------------------------------*/
 	/*---PRODUCTO--------*/	
@@ -572,9 +590,13 @@ class DBSql
 			$where .= " AND clienteRemitente = '".$filtro['cliente']."' ";
 		}
 		
+		if($filtro['idEstado'] != "T"){
+			$where .= " AND idEstado = '".$filtro['idEstado']."' ";
+		}
+		
 		$sel_query = " SELECT * ";
 		$sel_query.= " FROM cabecera_guia_remision ";
-        $sel_query.= " WHERE idEmpresa = '".$idEmpresa."' ".$where. " AND idEstado = '3'";
+        $sel_query.= " WHERE idEmpresa = '".$idEmpresa."' ".$where;
 		
        	//echo "query:".$sel_query;
        	$result = mysql_query($sel_query);
@@ -646,9 +668,13 @@ class DBSql
 			$where .= " AND cliente = '".$filtro['cliente']."' ";
 		}
 		
+		if($filtro['idEstado'] != "T"){
+			$where .= " AND idEstado = '".$filtro['idEstado']."' ";
+		}
+		
 		$sel_query = " SELECT * ";
 		$sel_query.= " FROM cabecera_factura_boleta ";
-        $sel_query.= " WHERE idEmpresa = '".$idEmpresa."' ".$where. " AND idEstado = '3'";
+        $sel_query.= " WHERE idEmpresa = '".$idEmpresa."' ".$where;
 		
        	//echo "query:".$sel_query;
        	$result = mysql_query($sel_query);
@@ -678,16 +704,67 @@ class DBSql
 	  
     /*--------------------------------------------------------------------------------------------------*/
 
+    function sqlFiltrarCabeceraNota($idEmpresa, $filtro){
+		//print_r($filtro);
+        // $where = "";
+        $where = "  AND DATE_FORMAT(fechaEmision, '%Y-%m-%d') ";
+		$where .= " BETWEEN STR_TO_DATE('".$filtro['fechaDesde']."', '%d/%m/%Y') AND STR_TO_DATE('".$filtro['fechaHasta']."', '%d/%m/%Y') ";
+		
+		if($filtro['serieNumero'] != ""){
+			$where .= " AND serieNumeroNota = '".$filtro['serieNumero']."' ";
+		}
+		
+		if($filtro['idTipoNota'] != "0"){
+			$where .= " AND idTipoNota = '".$filtro['idTipoNota']."' ";
+		}
+		
+		if($filtro['cliente'] != ""){
+			$where .= " AND cliente = '".$filtro['cliente']."' ";
+		}
+		
+		if($filtro['idEstado'] != "T"){
+			$where .= " AND idEstado = '".$filtro['idEstado']."' ";
+		}
+		
+		$sel_query = " SELECT * ";
+		$sel_query.= " FROM cabecera_nota ";
+        $sel_query.= " WHERE idEmpresa = '".$idEmpresa."' ".$where;
+		
+       	//echo "query:".$sel_query;
+       	$result = mysql_query($sel_query);
+     	return $result;		
+   	}
+	  
+	/*--------------------------------------------------------------------------------------------------*/
 
+	function sqlGetCabeceraNota($idEmpresa, $idCabeceraNota){
+       	$sel_query = " SELECT * ";
+		$sel_query.= " FROM cabecera_nota ";
+        $sel_query.= " WHERE idEmpresa = '".$idEmpresa."' AND idCabeceraNota = '".$idCabeceraNota."' ";
+        //echo "query:".$sel_query;
+       	$result = mysql_query($sel_query);
+     	return $result;
+   	}
+	
+	function sqlGetDetalleNota($idEmpresa, $idCabeceraNota){
+	 	$sel_query = " SELECT * ";
+		$sel_query.= " FROM detalle_nota ";
+        $sel_query.= " WHERE idEmpresa = '".$idEmpresa."' AND idCabeceraNota = '".$idCabeceraNota."' ";
+		$sel_query.= " ORDER BY idDetalleNota ";
+        //echo "query:".$sel_query;
+       	$result = mysql_query($sel_query);
+     	return $result;
+	}
 
     /*--------------------------------------------------------------------------------------------------*/
 
-    /*--------------------------------------------------------------------------------------------------*/
-
-
-
-
-
+	 function sqlGetTransportistaXID($idTransportista){
+       	$sel_query = " SELECT * FROM vw_transportista ";
+        $sel_query.= " WHERE idTransportista = '".$idTransportista."' ";
+        //echo "query:".$sel_query;
+       	$result = mysql_query($sel_query);
+     	return $result;
+   	}																																											
 
     /*--------------------------------------------------------------------------------------------------*/
 
@@ -1044,9 +1121,6 @@ class DBSql
      	return $result;
 	}
 	
-
-/*--------------------------------------------------------------------------------------*/	
-  
 
 
 

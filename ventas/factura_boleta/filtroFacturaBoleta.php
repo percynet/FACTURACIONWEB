@@ -47,10 +47,35 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
                                                 </div>                                            
                                             </td>
                                             <td width="10">&nbsp;</td>
-                                    		<td width="70">&nbsp;</td>
-                                       		<td width="200">&nbsp;</td> 
-                                            <td width="100">&nbsp;</td> 
-                                            <td width="100">&nbsp;</td>                                           
+                                    		<td width="70">Estado:</td>
+                                       		<td width="200">
+                                            	<select id="cboEstadoFiltro" name="cboEstadoFiltro" style="width:150px;">
+                                                  <option value="T">[TODOS]</option>	
+                                                    <?php
+                                                        $rsListaEstado= $objdb -> sqlFiltrarEstado('PROCESO');
+                                                        if (mysql_num_rows($rsListaEstado)!=0){
+                                                        	while ($rowEstado = mysql_fetch_array($rsListaEstado)){
+                                                        		$idEstadoX = $rowEstado["idEstado"];
+                                                        		$estadoX = $rowEstado["estado"];
+                                                        		
+                                                        		if($idEstadoX==$idEstado){
+                                                        ?>			
+                                                        			<option value="<?= $idEstadoX; ?>" selected="selected"><?= $estadoX; ?></option>
+                                                        <?php	
+                                                        		}else{
+                                                        ?>			
+                                                        			<option value="<?= $idEstadoX; ?>" ><?= $estadoX; ?></option>
+                                                        <?php										
+                                                        		}
+                                                        	
+                                                        	}
+                                                        	mysql_free_result($rsListaEstado);
+                                                        }
+                                                    ?>
+                                                </select>
+                                            </td>
+                                            <td width="100">&nbsp;</td>
+                                            <td width="100">&nbsp;</td>
                                         </tr>
                                         <tr style="height:30px;">
    											<td>Serie-Numero:</td>
@@ -145,7 +170,9 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
             fechaDesde: $.trim($("#fechaDesde").val()),
 			fechaHasta: $.trim($("#fechaHasta").val()),
 			serieNumero: $.trim($("#serieNumeroFiltro").val()),
-			cliente: $.trim($("#clienteFiltro").val())
+			cliente: $.trim($("#clienteFiltro").val()),
+			idEstado: $.trim($("#cboEstadoFiltro").val()),
+			estado: $.trim($("#cboEstadoFiltro option:selected").text())
         };
     
         $("#resultadoFiltroDiv").html("<center><b>Actualizando informacion</b><br>Por favor espere...<br><img src='theme/images/loading.gif'></center>");

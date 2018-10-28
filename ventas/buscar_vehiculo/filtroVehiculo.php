@@ -219,7 +219,7 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
                 $("#cboModelo").append(dataResult);
 	   		},
 	   		error: function(){
-	   			alert("Se ha producido un error");
+	   			Mostrar_Mensaje_Notificacion("error","Se ha producido un error. No puede continuar con el proceso.");
 	   		}
 	 	});
 				
@@ -239,7 +239,7 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
 		var idModelo = $("#cboModelo").val();
 		
 		if(idTransportista == "0"){
-			alert("Seleccione el transportista");
+			Mostrar_Mensaje_Notificacion("warning","Debe seleccionar el transportista");
 			return false;
 		}
 		/*

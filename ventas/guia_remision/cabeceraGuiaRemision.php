@@ -37,7 +37,7 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
                 <div class="dataTable_wrapper">
                     
                     <div class="row">
-                        <div class="col-lg-9">
+                        <div class="col-lg-10">
                             <div class="panel panel-default">
                                 <div class="panel-body">
                                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -67,7 +67,7 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
                                     		<td width="200">N° Guia Remision(Transportista):</td>
                                        		<td>
                                                 <div id="nroGRDiv">
-                                                    <input type="text" id="serieNumeroGRTransportista"  value="<?= $cabeceraGR['serieNumeroGRTransportista']; ?>" readonly="readonly" />
+                                                    <input type="text" id="serieNumeroGRTransportista"  value="<?= $cabeceraGR['serieNumeroGRTransportista']; ?>" readonly="readonly" style="background-color : #d1d1d1;" />
                                                 </div>
                                             </td>
                                         </tr>
@@ -77,31 +77,43 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
                             </div>
 
                         </div>
-                        <!-- /.col-lg-12 -->
+                        <!-- /.col-lg-10 -->
                         
-						<div class="col-lg-3">
+                        <div class="col-lg-2">
                             <div class="panel panel-default">
                                 <div class="panel-body">
                                     <table border="0" cellpadding="0" cellspacing="0" width="100%">                    
-                    					<tr style="height:20px;" align="center">
+                    					<tr style="height:30px;" align="center">
                                        		<td>
                                                 <div style="padding:0px;">
-                                                    <button id="btnNuevo" class="btn btn-warning" >
+                                                    <button id="btnNuevo" class="btn btn-warning" style="width:100px;" >
                                                     	<i class="icon-search"></i> Nuevo &nbsp;</button>&nbsp;&nbsp;&nbsp;
-                                                    <button id="btnGrabar" class="btn btn-info" >
+                                                </div>
+                                            </td>
+                                        </tr>                                        
+                                        <tr style="height:30px;" align="center">
+                                       		<td>
+                                                <div style="padding:0px;">
+                                                    <button id="btnGrabar" class="btn btn-info" style="width:100px;" >
                                                     	<i class="icon-search"></i> Guardar</button>&nbsp;&nbsp;&nbsp;
-                                                    <button id="btnRegresar" class="btn btn-danger" >
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr style="height:30px;" align="center">
+                                       		<td>
+                                                <div style="padding:0px;">
+                                                    <button id="btnRegresar" class="btn btn-danger" style="width:100px;" >
                                                     	<i class="icon-search"></i> Regresar</button>&nbsp;&nbsp;&nbsp;
                                                 </div>
                                             </td>
                                         </tr>
-                                        
                                    	</table>
                                	</div>
                             </div>
 
                         </div>
-                        <!-- /.col-lg-12 -->                        
+                        <!-- /.col-lg-2 --> 
+                       
                     </div>
                     <!-- /.row -->
                     
@@ -117,7 +129,7 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
                                         <tr style="height:25px;">    
                                    			<td width="100">Razon Social:</td>
                                         	<td width="300" colspan="4">                                           		
-                                            	<input id="clienteRemitente"  maxlength="100" style="width:200px;" readonly="readonly" value="<?= $cabeceraGR['clienteRemitente']; ?>" />
+                                            	<input id="clienteRemitente"  maxlength="100" readonly="readonly" value="<?= $cabeceraGR['clienteRemitente']; ?>" style="background-color: #d1d1d1;" />
                                             </td>
                                             <td>
                                             	<div style="padding:5px;">
@@ -129,12 +141,12 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
                                         <tr style="height:25px;">
                                             <td>Doc. Identidad:</td>
                                         	<td>
-                                            	<input id="documentoIdentidadCR"  maxlength="200" style="width:250px;" readonly="readonly" value="<?= $cabeceraGR['documentoIdentidadCR']; ?>" />
+                                            	<input id="documentoIdentidadCR"  maxlength="200" readonly="readonly" value="<?= $cabeceraGR['documentoIdentidadCR']; ?>" style="background-color: #d1d1d1;" />
                                             </td>
 	                                        <td>&nbsp;</td>
                                             <td>Nro Documento:</td>
                                         	<td>
-                                            	<input id="numeroDocumentoIdentidadCR"  maxlength="100" style="width:250px;" readonly="readonly" value="<?= $cabeceraGR['numeroDocumentoIdentidadCR']; ?>" />
+                                            	<input id="numeroDocumentoIdentidadCR"  maxlength="100" readonly="readonly" value="<?= $cabeceraGR['numeroDocumentoIdentidadCR']; ?>" style="background-color: #d1d1d1;" />
                                             </td>
                                         </tr>
                                    	</table>
@@ -154,7 +166,7 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
                                         <tr style="height:25px;">    
                                    			<td width="100">Razon Social:</td>
                                         	<td width="300" colspan="4">
-                                            	<input id="clienteDestinatario"  maxlength="100" style="width:200px;" readonly="readonly" value="<?= $cabeceraGR['clienteDestinatario']; ?>" />
+                                            	<input id="clienteDestinatario"  maxlength="100" readonly="readonly" value="<?= $cabeceraGR['clienteDestinatario']; ?>" style="background-color: #d1d1d1;" />
                                             </td>
                                             <td>
                                             	<div style="padding:5px;">
@@ -166,12 +178,12 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
                                         <tr style="height:25px;">
                                             <td>Doc. Identidad:</td>
                                         	<td>
-                                            	<input id="documentoIdentidadCD"  maxlength="100" style="width:250px;" readonly="readonly" value="<?= $cabeceraGR['documentoIdentidadCD']; ?>" />
+                                            	<input id="documentoIdentidadCD"  maxlength="100" readonly="readonly" value="<?= $cabeceraGR['documentoIdentidadCD']; ?>" style="background-color: #d1d1d1;" />
                                             </td>
 	                                        <td>&nbsp;</td>
                                             <td>Nro Documento:</td>
                                         	<td>
-                                            	<input id="numeroDocumentoIdentidadCD"  maxlength="100" style="width:250px;" readonly="readonly" value="<?= $cabeceraGR['numeroDocumentoIdentidadCD']; ?>" />
+                                            	<input id="numeroDocumentoIdentidadCD"  maxlength="100" readonly="readonly" value="<?= $cabeceraGR['numeroDocumentoIdentidadCD']; ?>" style="background-color: #d1d1d1;" />
                                             </td>
                                         </tr>
                                    	</table>
@@ -197,46 +209,45 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
                                         <tr style="height:25px;">
                                             <td>Tipo Via:</td>
                                         	<td colspan="2">
-                                            	<input id="tipoViaPAR"  maxlength="100"  readonly="readonly" value="<?= $cabeceraGR['tipoViaPAR']; ?>" />
+                                            	<input id="tipoViaPAR"  maxlength="100"  readonly="readonly" value="<?= $cabeceraGR['tipoViaPAR']; ?>" style="background-color: #d1d1d1;" />
                                             </td>
                                             <td align="right">Nombre Via:</td>
                                         	<td colspan="2">
-                                            	<input id="nombreViaPAR"  maxlength="100" readonly="readonly" value="<?= $cabeceraGR['nombreViaPAR']; ?>" />
+                                            	<input id="nombreViaPAR"  maxlength="100" readonly="readonly" value="<?= $cabeceraGR['nombreViaPAR']; ?>" style="background-color: #d1d1d1;" />
                                             </td>   	
                                         </tr>                                        
                                         <tr style="height:25px;">
                                             <td>Nro:</td>
                                         	<td>
-                                            	<input id="numeroPAR"  maxlength="100" readonly="readonly" value="<?= $cabeceraGR['numeroPAR']; ?>" />
+                                            	<input id="numeroPAR"  maxlength="100" readonly="readonly" value="<?= $cabeceraGR['numeroPAR']; ?>" style="background-color: #d1d1d1;" />
                                             </td>
 	                                        
                                             <td>Interior:</td>
                                         	<td>
-                                            	<input id="interiorPAR"  maxlength="100" readonly="readonly" value="<?= $cabeceraGR['interiorPAR']; ?>" />
+                                            	<input id="interiorPAR"  maxlength="100" readonly="readonly" value="<?= $cabeceraGR['interiorPAR']; ?>" style="background-color: #d1d1d1;" />
                                             </td>
                                             
                                             <td>Zona:</td>
                                         	<td>
-                                            	<input id="zonaPAR"  maxlength="100" readonly="readonly" value="<?= $cabeceraGR['zonaPAR']; ?>" />
+                                            	<input id="zonaPAR"  maxlength="100" readonly="readonly" value="<?= $cabeceraGR['zonaPAR']; ?>" style="background-color: #d1d1d1;" />
                                             </td>
                                             <!--  <td>&nbsp;</td>-->
                                         </tr>
                                         <tr style="height:25px;">
                                             <td>Departamento:</td>
                                         	<td>
-                                            	<input id="departamentoPAR"  maxlength="100" readonly="readonly" value="<?= $cabeceraGR['departamentoPAR']; ?>" />
+                                            	<input id="departamentoPAR"  maxlength="100" readonly="readonly" value="<?= $cabeceraGR['departamentoPAR']; ?>" style="background-color: #d1d1d1;" />
                                             </td>
 	                                        
                                             <td>Provincia:</td>
                                         	<td>
-                                                <input id="provinciaPAR"  maxlength="100" readonly="readonly" value="<?= $cabeceraGR['provinciaPAR']; ?>" />
+                                                <input id="provinciaPAR"  maxlength="100" readonly="readonly" value="<?= $cabeceraGR['provinciaPAR']; ?>" style="background-color: #d1d1d1;" />
                                             </td>
                                             
                                             <td>Distrito:</td>
                                         	<td>
-                                            	<input id="distritoPAR"  maxlength="100" readonly="readonly" value="<?= $cabeceraGR['distritoPAR']; ?>" />
+                                            	<input id="distritoPAR"  maxlength="100" readonly="readonly" value="<?= $cabeceraGR['distritoPAR']; ?>" style="background-color: #d1d1d1;" />
                                             </td>
-                                            <!--  <td>&nbsp;</td>-->
                                         </tr>
                                    	</table>
                                     
@@ -257,54 +268,45 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
                                         <tr style="height:25px;">
                                             <td>Tipo Via:</td>
                                         	<td colspan="2">
-                                            	<input id="tipoViaLLE"  maxlength="100"  readonly="readonly" value="<?= $cabeceraGR['tipoViaLLE']; ?>" />
+                                            	<input id="tipoViaLLE"  maxlength="100"  readonly="readonly" value="<?= $cabeceraGR['tipoViaLLE']; ?>" style="background-color: #d1d1d1;" />
                                             </td>
                                             <td align="right">Nombre Via:</td>
                                         	<td colspan="2">
-                                            	<input id="nombreViaLLE"  maxlength="100" readonly="readonly" value="<?= $cabeceraGR['nombreViaLLE']; ?>" />
-                                            </td>
-                                            <!--                                              
-                                            <td>
-                                            	<div style="padding:5px;">
-                                                    <button class="btn btn-primary" onclick="Buscar_Resultados();">
-                                                    	<i class="icon-search"></i> Buscar</button>
-                                                </div>
-                                            </td>
-                                            --> 	
+                                            	<input id="nombreViaLLE"  maxlength="100" readonly="readonly" value="<?= $cabeceraGR['nombreViaLLE']; ?>" style="background-color: #d1d1d1;" />
+                                            </td> 	
                                         </tr>                                        
                                         <tr style="height:25px;">
                                             <td>Nro:</td>
                                         	<td>
-                                            	<input id="numeroLLE"  maxlength="100" readonly="readonly" value="<?= $cabeceraGR['numeroLLE']; ?>" />
+                                            	<input id="numeroLLE"  maxlength="100" readonly="readonly" value="<?= $cabeceraGR['numeroLLE']; ?>" style="background-color: #d1d1d1;" />
                                             </td>
 	                                        
                                             <td>Interior:</td>
                                         	<td>
-                                            	<input id="interiorLLE"  maxlength="100" readonly="readonly" value="<?= $cabeceraGR['interiorLLE']; ?>" />
+                                            	<input id="interiorLLE"  maxlength="100" readonly="readonly" value="<?= $cabeceraGR['interiorLLE']; ?>" style="background-color: #d1d1d1;" />
                                             </td>
                                             
                                             <td>Zona:</td>
                                         	<td>
-                                            	<input id="zonaLLE"  maxlength="100" readonly="readonly" value="<?= $cabeceraGR['zonaLLE']; ?>" />
+                                            	<input id="zonaLLE"  maxlength="100" readonly="readonly" value="<?= $cabeceraGR['zonaLLE']; ?>" style="background-color: #d1d1d1;" />
                                             </td>
                                             <!--  <td>&nbsp;</td>-->
                                         </tr>
                                         <tr style="height:25px;">
                                             <td>Departamento:</td>
                                         	<td>
-                                            	<input id="departamentoLLE"  maxlength="100" readonly="readonly" value="<?= $cabeceraGR['departamentoLLE']; ?>" />
+                                            	<input id="departamentoLLE"  maxlength="100" readonly="readonly" value="<?= $cabeceraGR['departamentoLLE']; ?>" style="background-color: #d1d1d1;" />
                                             </td>
 	                                        
                                             <td>Provincia:</td>
                                         	<td>
-                                                <input id="provinciaLLE"  maxlength="100" readonly="readonly" value="<?= $cabeceraGR['provinciaLLE']; ?>" />
+                                                <input id="provinciaLLE"  maxlength="100" readonly="readonly" value="<?= $cabeceraGR['provinciaLLE']; ?>" style="background-color: #d1d1d1;" />
                                             </td>
                                             
                                             <td>Distrito:</td>
                                         	<td>
-                                            	<input id="distritoLLE"  maxlength="100" readonly="readonly" value="<?= $cabeceraGR['distritoLLE']; ?>" />
+                                            	<input id="distritoLLE"  maxlength="100" readonly="readonly" value="<?= $cabeceraGR['distritoLLE']; ?>" style="background-color: #d1d1d1;" />
                                            	</td>
-                                            <!--  <td>&nbsp;</td>-->
                                         </tr>
                                    	</table>
                                     
@@ -340,7 +342,7 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
                                         <tr style="height:25px;">    
                                    			<td width="100">Razon Social:</td>
                                         	<td width="300" colspan="4">
-                                            	<input id="razonSocialTransportista"  maxlength="100" style="width:200px;" readonly="readonly" value="<?= $cabeceraGR['razonSocialTransportista']; ?>" />
+                                            	<input id="razonSocialTransportista"  maxlength="100" readonly="readonly" value="<?= $cabeceraGR['razonSocialTransportista']; ?>" style="background-color: #d1d1d1;" />
                                             </td>
                                             <td>
                                             	<div style="padding:5px;">
@@ -352,7 +354,7 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
                                         <tr style="height:25px;">
                                             <td>R.U.C:</td>
                                         	<td>
-                                            	<input id="rucTransportista"  maxlength="100" style="width:250px;" readonly="readonly" value="<?= $cabeceraGR['rucTransportista']; ?>" />
+                                            	<input id="rucTransportista"  maxlength="100" readonly="readonly" value="<?= $cabeceraGR['rucTransportista']; ?>" style="background-color: #d1d1d1;" />
                                             </td>
 	                                        <td>&nbsp;</td>
                                             <td>&nbsp;</td>
@@ -363,11 +365,6 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
                             </div>
                             
                             <div class="panel panel-default">
-                            	<!--
-                            	<div class="panel-head">
-                                	<b>&nbsp;&nbsp;&nbsp;</b>
-                                </div>
-                                -->
                                 <div class="panel-body">
                                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
                                         <tr style="height:25px;">    
@@ -394,7 +391,7 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
                                         <tr style="height:25px;">    
                                    			<td width="200">Marca del Vehiculo:</td>
                                         	<td width="200" colspan="4">                                           		
-                                            	<input id="marca"  maxlength="100" style="width:200px;" readonly="readonly" value="<?= $cabeceraGR['marca']; ?>" />
+                                            	<input id="marca"  maxlength="100" readonly="readonly" value="<?= $cabeceraGR['marca']; ?>" style="background-color: #d1d1d1;" />
                                             </td>
                                           	<td width="100">
                                            		<div id="btnBuscarVehiculoDiv" style="display:none; padding:5px;">
@@ -406,33 +403,33 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
                                         <tr style="height:25px;">
                                             <td width="100">Placa Tracto:</td>
                                         	<td width="150">
-                                            	<input id="placaTracto"  maxlength="100" style="width:200px;" readonly="readonly" value="<?= $cabeceraGR['placaTracto']; ?>" />
+                                            	<input id="placaTracto"  maxlength="100" readonly="readonly" value="<?= $cabeceraGR['placaTracto']; ?>" style="background-color: #d1d1d1;" />
                                             </td>
 	                                        <td width="30">&nbsp;</td>
                                             <td width="100">Placa Remolque:</td>
                                         	<td width="150">
-                                            	<input id="placaRemolque"  maxlength="100" style="width:250px;" readonly="readonly" value="<?= $cabeceraGR['placaRemolque']; ?>" />
+                                            	<input id="placaRemolque"  maxlength="100" readonly="readonly" value="<?= $cabeceraGR['placaRemolque']; ?>" style="background-color: #d1d1d1;" />
                                             </td>
                                             <td>&nbsp;</td>
                                         </tr>
                                         <tr style="height:25px;">
                                             <td>Configuracion Vehicular:</td>
                                         	<td colspan="4">
-                                            	<input id="configuracionVehicular"  maxlength="100" style="width:200px;" readonly="readonly" value="<?= $cabeceraGR['configuracionVehicular']; ?>" />
+                                            	<input id="configuracionVehicular"  maxlength="100" readonly="readonly" value="<?= $cabeceraGR['configuracionVehicular']; ?>" style="background-color: #d1d1d1;" />
                                             </td>
                                             <td>&nbsp;</td>
                                         </tr>
                                         <tr style="height:25px;">
                                             <td>Nro Certificado de Inscripcion:</td>
                                         	<td colspan="4">
-                                            	<input id="certificadoInscripcion"  maxlength="100" style="width:200px;" readonly="readonly" value="<?= $cabeceraGR['certificadoInscripcion']; ?>" />
+                                            	<input id="certificadoInscripcion"  maxlength="100" readonly="readonly" value="<?= $cabeceraGR['certificadoInscripcion']; ?>" style="background-color: #d1d1d1;" />
                                             </td>
                                             <td>&nbsp;</td>                                         
                                         </tr>                                        
                                         <tr style="height:25px;">
                                             <td>Nombre Chofer:</td>
                                         	<td colspan="4">
-                                            	<input id="chofer"  maxlength="100" style="width:200px;" readonly="readonly" value="<?= $cabeceraGR['chofer']; ?>" />
+                                            	<input id="chofer"  maxlength="100" readonly="readonly" value="<?= $cabeceraGR['chofer']; ?>" style="background-color: #d1d1d1;" />
                                             </td>
                                             <td>
                                             	<div id="btnBuscarChoferDiv" style="display:none; padding:5px;">
@@ -444,7 +441,7 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
                                         <tr style="height:25px;">
                                             <td>Nro licencia de Conducir:</td>
                                         	<td colspan="4">
-                                            	<input id="licenciaConducir"  maxlength="100" style="width:200px;" readonly="readonly" value="<?= $cabeceraGR['licenciaConducir']; ?>" />
+                                            	<input id="licenciaConducir"  maxlength="100" readonly="readonly" value="<?= $cabeceraGR['licenciaConducir']; ?>" style="background-color: #d1d1d1;" />
                                             </td>
                                             <td>&nbsp;</td>
                                         </tr>
@@ -939,7 +936,7 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
 				$("#anioFabricacion").val(dataListaVehiculo.anioFabricacion);						
 			
 			}else{
-				Mostrar_Mensaje_Notificacion("warning","No se encontro el vehiculo");		
+				Mostrar_Mensaje_Notificacion("warning","No se encontro el vehiculo");
 			}
 						
 			Cerrar_Popup_Buscar_Vehiculo();

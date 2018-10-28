@@ -117,7 +117,7 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
 		var idDocumento = 0;
 
 		var bContinue = false;
-		alert("creando");
+		//alert("creando");
 		//Iniciar_Variables_Documento();
 	
 		$("#content").html("<center><img src='theme/images/loading.gif'><br><b>Actualizando informacion</b>"+
@@ -152,7 +152,7 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
 		
 		if(filtro == 1 || filtro == 2){
 			if(valor == ""){
-				alert("Debe ingresar el valor del filtro");
+				Mostrar_Mensaje_Notificacion("warning","Debe ingresar el valor del filtro");
 				return false;
 			}
 		}

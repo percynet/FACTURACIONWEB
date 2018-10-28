@@ -69,6 +69,7 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
                         <ul style='width: 250px;'>
                             <li><a href="#" onclick="Ir_A_Pagina('mantenimiento/agencia/filtroAgencia');">Agencias</a></li>
                             <li type='separator'></li>
+                            <li><a href="#" onclick="Ir_A_Pagina('mantenimiento/transportista/filtroTransportista');">Transportistas</a></li>
                             <li><a href="#" onclick="Ir_A_Pagina('mantenimiento/calidad/filtroCalidad');">Calidades</a></li>
                             <li><a href="#" onclick="Ir_A_Pagina('mantenimiento/color/filtroColor');">Colores</a></li>
                             <li><a href="#" onclick="Ir_A_Pagina('mantenimiento/marca/filtroMarca');">Marcas</a></li>
@@ -124,6 +125,8 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
                         <ul style='width: 200px;'>
                             <li><a href="#" onclick="Ir_A_Pagina('ventas/factura_boleta/filtroFacturaBoleta');">Facturas y Boletas</a></li>
                             <li><a href="#" onclick="Ir_A_Pagina('ventas/guia_remision/filtroGuiaRemision');">Guias de Remisión</a></li>
+                            <li type='separator'></li>
+                            <li><a href="#" onclick="Ir_A_Pagina('ventas/nota/filtroNota');">Nota de Credito / Debito</a></li>
                         </ul>
                     </li>
 <?php
@@ -161,6 +164,7 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
                                     <li><a href="#">Reporte 3</a></li>
                                     <li><a href="#">Reporte 4</a></li>
                                     <li><a href="#">Reporte 5</a></li>
+									<li><a href="#">Reporte 6</a></li>
                                 </ul>
                             </li>                            
                         </ul>

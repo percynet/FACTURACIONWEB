@@ -145,7 +145,7 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
 		
 		if(filtro == 1 || filtro == 2 || filtro == 3){
 			if(valor == ""){
-				alert("Debe ingresar el valor del filtro");
+				Mostrar_Mensaje_Notificacion("warning","Debe seleccionar el valor del filtro");
 				return false;
 			}
 		}

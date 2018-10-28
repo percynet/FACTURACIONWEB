@@ -133,6 +133,7 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
 				
 				container.append('<button id="btnAgregarProducto" type="button" class="btn btn-success" ><i class="fa fa-ok"></i>&nbsp;Agregar</button>&nbsp;');
 				container.append('<button id="btnEliminarProducto" type="button" class="btn btn-danger" ><i class="fa fa-ok"></i>&nbsp;Eliminar</button>&nbsp;');
+				container.append('<button id="btnLimpiarDetalle" type="button" class="btn btn-warning" ><i class="fa fa-ok"></i>&nbsp;Limpiar</button>&nbsp;');
 				
 				
 				$("#btnAgregarProducto").click(function () {					
@@ -141,6 +142,15 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
 				
 				$("#btnEliminarProducto").click(function () {
 					Eliminar_Producto();					
+				});
+				
+				$("#btnLimpiarDetalle").click(function () {	
+					if(!confirm(" ¿ Esta seguro de limpiar el detalle ?")){
+						return false;
+					}		
+					$("#jqxGridDetalle").jqxGrid('clear');
+					Sumar_Totales();
+					Obtener_Numero_A_Letras();
 				});
 				
             },

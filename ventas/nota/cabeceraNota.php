@@ -1,4 +1,4 @@
-<?php 
+<?php
 session_start();
 include("../../seguridad.php");
 
@@ -9,34 +9,44 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
     
     $idEmpresa = $_SESSION['EMPRESA']['idEmpresa'];
 	
-	$idCabeceraFB = $_POST['idCabeceraFB'];
-	$accion = $_POST['accion'];
-	$cabeceraFB['idCabeceraFB'] = "0";
-	$cabeceraFB['totalImporte'] = "0.00";
-	$cabeceraFB['totalIGV'] = "0.00";
-	$cabeceraFB['totalVenta'] = "0.00";
+	$idCabeceraNota = $_POST['idCabeceraNota'];
+	$idTipoNota = $_POST['idTipoNota'];
+	$tipoNota = $_POST['tipoNota'];
 	
+	$accion = $_POST['accion'];
+	$textoAccion = "Nuevo ";
+	$cabeceraNota['idCabeceraNota'] = "0";
+	$cabeceraNota['idTipoNota'] = $idTipoNota;
+	$cabeceraNota['tipoNota'] = $tipoNota;
+	$cabeceraNota['totalImporte'] = "0.00";
+	$cabeceraNota['totalIGV'] = "0.00";
+	$cabeceraNota['totalVenta'] = "0.00";
+	//echo "idCabeceraNota: ".$idCabeceraNota;
     $objdb = new DBSql($_SESSION['paramdb']);
     $objdb -> db_connect();
         		
     if ($objdb -> is_connection()){
 
-			$rsCabeceraFB =  $objdb -> sqlGetCabeceraFacturaBoleta($idEmpresa, $idCabeceraFB);
+		if($accion == "1"){
+			$textoAccion = "Editar ";
+			$rsCabeceraNota =  $objdb -> sqlGetCabeceraNota($idEmpresa, $idCabeceraNota);
 			
-			if (mysql_num_rows($rsCabeceraFB)==1){
-				$cabeceraFB = mysql_fetch_array($rsCabeceraFB);
-				//print_r(json_encode($cabeceraFB));	
-				$idComprobantePago = $cabeceraFB['idComprobantePago'];
-				$idFormaPago = $cabeceraFB['idFormaPago'];
-				$idMoneda = $cabeceraFB['idMoneda'];
-            }	
+			if (mysql_num_rows($rsCabeceraNota)==1){
+				$cabeceraNota = mysql_fetch_array($rsCabeceraNota);
+				//print_r(json_encode($cabeceraNota));	
+				$idComprobantePagoRef = $cabeceraNota['idComprobantePagoRef'];
+				$idTipoNota = $cabeceraNota['idTipoNota'];
+				$idMotivoNota = $cabeceraNota['idMotivoNota'];
+				$idMoneda = $cabeceraNota['idMoneda'];
+			}
+		}
 ?>
 
 <div class="row">
     <div class="col-lg-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-            	<b>Nueva Factura / Boleta</b>
+            	<b><?=$textoAccion; ?>&nbsp;<?=$tipoNota; ?></b>
             </div>
             <!-- /.panel-heading -->
             <div class="panel-body">
@@ -48,26 +58,33 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
                                 <div class="panel-body">
                                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
                     
-                    					<tr style="height:25px;">                                           
+                    					<tr style="height:25px;">
                                     		<td width="120">Fecha Emision:</td>
                                        		<td width="150">
                                                 <div id="fechaEmisionDiv">
                                                     <div style='margin-top: 3px;' id='fechaEmision' />
                                                 </div>
                                             </td>
-                                            <td width="70">&nbsp;</td>
-                                    		<td width="120">Comprobante:</td>
+                                            <td width="50">&nbsp;</td>
+                                    		<td width="120">Serie Numero:</td>
+                                       		<td>
+                                                <div id="nroNotaDiv">
+                                                    <input type="text" id="serieNumeroNota" value="<?= $cabeceraNota['serieNumeroNota']; ?>" readonly="readonly" style="background-color : #d1d1d1;" />
+                                                </div>
+                                            </td>
+                                            <td width="50">&nbsp;</td>
+                                    		<td width="150">Comprobante que mod.:</td>
                                        		<td width="150">
-                                                <select id="cboComprobantePago" name="cboComprobantePago" style="width:150px;" onchange="Sumar_Totales();">
-                                                  <option value="0">[SELECCIONAR]</option>	
+                                                <select id="cboComprobantePagoRef" name="cboComprobantePagoRef" style="width:150px;" onchange="Sumar_Totales();">
+                                                  <option value="0">[SELECCIONAR]</option>
                                                     <?php
-                                                        $rsListaComprobantePago= $objdb -> sqlListaComprobantePago($idEmpresa, "U");
+                                                        $rsListaComprobantePago= $objdb -> sqlListaComprobantePago($idEmpresa, 'U');
                                                         if (mysql_num_rows($rsListaComprobantePago)!=0){
                                                         	while ($rowComprobantePago = mysql_fetch_array($rsListaComprobantePago)){
                                                         		$idComprobantePagoX = $rowComprobantePago["idComprobantePago"];
                                                         		$comprobantePagoX = $rowComprobantePago["comprobantePago"];
                                                         		
-                                                        		if($idComprobantePagoX==$idComprobantePago){
+                                                        		if($idComprobantePagoX==$idComprobantePagoRef){
                                                         ?>			
                                                         			<option value="<?= $idComprobantePagoX; ?>" selected="selected"><?= $comprobantePagoX; ?></option>
                                                         <?php	
@@ -82,49 +99,48 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
                                                         }
                                                     ?>
                                                 </select>
-
                                             </td>
-                                            <td width="70">&nbsp;</td>
-                                    		<td width="120">Serie Numero:</td>
+                                            <td width="50">&nbsp;</td>
+                                    		<td width="120">S/N Comp. mod.:</td>
                                        		<td>
-                                                <div id="nroFBDiv">
-                                                    <input type="text" id="serieNumeroFB" value="<?= $cabeceraFB['serieNumeroFB']; ?>" readonly="readonly" style="background-color : #d1d1d1;" />
+                                                <div id="nroCPRefDiv">
+                                                    <input type="text" id="serieNumeroCPRef" value="<?= $cabeceraNota['serieNumeroCPRef']; ?>" />
                                                 </div>
                                             </td>
                                         </tr>
                     					<tr style="height:25px;">
-                                    		<td width="120">Forma Pago:</td>
+                                    		<td width="120">Motivo Nota:</td>
                                        		<td width="150">
-                                            	<select id="cboFormaPago" name="cboFormaPago" style="width:150px;">
+                                            	<select id="cboMotivoNota" name="cboMotivoNota" style="width:150px;">
                                                   <option value="0">[SELECCIONAR]</option>	
                                                     <?php
-                                                        $rsListaFormaPago= $objdb -> sqlListaFormaPago($idEmpresa);
-                                                        if (mysql_num_rows($rsListaFormaPago)!=0){
-                                                        	while ($rowFormaPago = mysql_fetch_array($rsListaFormaPago)){
-                                                        		$idFormaPagoX = $rowFormaPago["idFormaPago"];
-                                                        		$formaPagoX = $rowFormaPago["formaPago"];
+                                                        $rsListaMotivoNota= $objdb -> sqlListaMotivoNota($idEmpresa);
+                                                        if (mysql_num_rows($rsListaMotivoNota)!=0){
+                                                        	while ($rowMotivoNota = mysql_fetch_array($rsListaMotivoNota)){
+                                                        		$idMotivoNotaX = $rowMotivoNota["idMotivoNota"];
+                                                        		$motivoNotaX = $rowMotivoNota["motivoNota"];
                                                         		
-                                                        		if($idFormaPagoX==$idFormaPago){
+                                                        		if($idMotivoNotaX==$idMotivoNota){
                                                         ?>			
-                                                        			<option value="<?= $idFormaPagoX; ?>" selected="selected"><?= $formaPagoX; ?></option>
+                                                        			<option value="<?= $idMotivoNotaX; ?>" selected="selected"><?= $motivoNotaX; ?></option>
                                                         <?php	
                                                         		}else{
                                                         ?>			
-                                                        			<option value="<?= $idFormaPagoX; ?>" ><?= $formaPagoX; ?></option>
+                                                        			<option value="<?= $idMotivoNotaX; ?>" ><?= $motivoNotaX; ?></option>
                                                         <?php										
                                                         		}
                                                         	
                                                         	}
-                                                        	mysql_free_result($rsListaFormaPago);
+                                                        	mysql_free_result($rsListaMotivoNota);
                                                         }
                                                     ?>
                                                 </select>
-                                            </td>
-                                            <td width="70">&nbsp;</td>
+                                            </td>                                            
+                                            <td width="50">&nbsp;</td>
                                     		<td width="120">Moneda:</td>
                                        		<td width="150">
 												<select id="cboMoneda" name="cboMoneda" style="width:150px;">
-                                                  <option value="0">[SELECCIONAR]</option>	
+                                                  <!--<option value="0">[SELECCIONAR]</option>	-->
                                                     <?php
                                                         $rsListaMoneda= $objdb -> sqlListaMoneda($idEmpresa);
                                                         if (mysql_num_rows($rsListaMoneda)!=0){
@@ -148,11 +164,14 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
                                                     ?>
                                                 </select>
                                             </td>
-                                            <td width="70">&nbsp;</td>
-                                    		<td width="120">S/N Guia Ref:</td>
+                                            <td width="50">&nbsp;</td>
+                                    		<td width="120">&nbsp;</td>
+                                       		<td>&nbsp;</td>
+                                            <td width="50">&nbsp;</td>
+                                    		<td width="120">F.E. Comp. mod:</td>
                                        		<td>
-                                                <div id="nroFBDiv">
-                                                    <input type="text" id="serieNumeroGRef" value="<?= $cabeceraFB['serieNumeroGRef']; ?>" />
+                                                <div id="fechaEmisionCPRefDiv">
+                                                    <div style='margin-top: 3px;' id='fechaEmisionCPRef' />
                                                 </div>
                                             </td>
                                         </tr>
@@ -161,9 +180,9 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
                             </div>
 
                         </div>
-                        <!-- /.col-lg-10 -->
+                        <!-- /.col-lg-12 -->
                         
-                        <div class="col-lg-2">
+						<div class="col-lg-2">
                             <div class="panel panel-default">
                                 <div class="panel-body">
                                     <table border="0" cellpadding="0" cellspacing="0" width="100%">                    
@@ -172,40 +191,20 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
                                                 <div style="padding:0px;">
                                                     <button id="btnNuevo" class="btn btn-warning" style="width:100px;" >
                                                     	<i class="icon-search"></i> Nuevo &nbsp;</button>&nbsp;&nbsp;&nbsp;
-                                                 	<!--
-                                                    <button id="btnGrabar" class="btn btn-info" >
-                                                    	<i class="icon-search"></i> Guardar</button>&nbsp;&nbsp;&nbsp;
-                                                    <button id="btnRegresar" class="btn btn-danger" >
-                                                    	<i class="icon-search"></i> Regresar</button>&nbsp;&nbsp;&nbsp;
-                                                    -->
                                                 </div>
                                             </td>
                                         </tr>                                        
                                         <tr style="height:30px;" align="center">
                                        		<td>
                                                 <div style="padding:0px;">
-                                                	<!--
-                                                    <button id="btnNuevo" class="btn btn-warning" >
-                                                    	<i class="icon-search"></i> Nuevo &nbsp;</button>&nbsp;&nbsp;&nbsp;
-                                                    -->
                                                     <button id="btnGrabar" class="btn btn-info" style="width:100px;" >
                                                     	<i class="icon-search"></i> Guardar</button>&nbsp;&nbsp;&nbsp;
-                                                    <!--
-                                                    <button id="btnRegresar" class="btn btn-danger" >
-                                                    	<i class="icon-search"></i> Regresar</button>&nbsp;&nbsp;&nbsp;
-                                                    -->
                                                 </div>
                                             </td>
                                         </tr>
                                         <tr style="height:30px;" align="center">
                                        		<td>
                                                 <div style="padding:0px;">
-                                                	<!--
-                                                    <button id="btnNuevo" class="btn btn-warning" >
-                                                    	<i class="icon-search"></i> Nuevo &nbsp;</button>&nbsp;&nbsp;&nbsp;
-                                                    <button id="btnGrabar" class="btn btn-info" >
-                                                    	<i class="icon-search"></i> Guardar</button>&nbsp;&nbsp;&nbsp;
-                                                    -->
                                                     <button id="btnRegresar" class="btn btn-danger" style="width:100px;" >
                                                     	<i class="icon-search"></i> Regresar</button>&nbsp;&nbsp;&nbsp;
                                                 </div>
@@ -216,8 +215,7 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
                             </div>
 
                         </div>
-                        <!-- /.col-lg-2 -->      
-                                          
+                        <!-- /.col-lg-12 -->                        
                     </div>
                     <!-- /.row -->
                     
@@ -233,17 +231,17 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
                                         <tr style="height:25px;">    
                                    			<td width="100">Razon Social:</td>
                                         	<td width="300">
-                                            	<input id="cliente"  maxlength="100" readonly="readonly" value="<?= $cabeceraFB['cliente']; ?>" style="background-color: #d1d1d1;" />
+                                            	<input id="cliente"  maxlength="100" readonly="readonly" value="<?= $cabeceraNota['cliente']; ?>" style="background-color: #d1d1d1;" />
                                             </td>
                                             <td width="70">&nbsp;</td>
                                             <td width="100">Doc. Identidad:</td>
                                         	<td>
-                                            	<input id="documentoIdentidad"  maxlength="200" readonly="readonly" value="<?= $cabeceraFB['documentoIdentidad']; ?>" style="background-color: #d1d1d1;" />
+                                            	<input id="documentoIdentidad"  maxlength="200" readonly="readonly" value="<?= $cabeceraNota['documentoIdentidad']; ?>" style="background-color: #d1d1d1;" />
                                             </td>
 	                                        <td width="70">&nbsp;</td>
                                             <td width="100">Nro Documento:</td>
                                         	<td>
-                                            	<input id="numeroDocumentoIdentidad"  maxlength="100" readonly="readonly" value="<?= $cabeceraFB['numeroDocumentoIdentidad']; ?>" style="background-color: #d1d1d1;" />
+                                            	<input id="numeroDocumentoIdentidad"  maxlength="100" readonly="readonly" value="<?= $cabeceraNota['numeroDocumentoIdentidad']; ?>" style="background-color: #d1d1d1;" />
                                             </td>                                            
                                             <td width="70">&nbsp;</td>
                                             <td>
@@ -256,7 +254,7 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
                                         <tr style="height:25px;">
                                             <td>Direccion:</td>
                                         	<td width="300" colspan="8">
-                                            	<input id="direccionActual"  maxlength="200" readonly="readonly" value="<?= $cabeceraFB['direccion']; ?>" style="background-color: #d1d1d1;" />
+                                            	<input id="direccionActual"  maxlength="200" readonly="readonly" value="<?= $cabeceraNota['direccion']; ?>" style="background-color: #d1d1d1;" />
                                             </td>
 	                                        <td>&nbsp;</td>
                                         </tr>
@@ -273,7 +271,7 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
                     <div class="row">    
                         <div class="col-lg-12">
                             <div class="panel-body">
-								<div id="detalleFacturaBoletaDiv"></div>
+								<div id="detalleNotaDiv"></div>
                             </div>
                         </div>
                         <!-- /.col-lg-12 -->
@@ -293,27 +291,19 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
                                 <div class="panel-body">
                                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
                                         <tr style="height:25px;">
-                                        	<td width="70">&nbsp;</td>
-                                   			<td width="100">SON:</td>
-                                        	<td width="800" colspan="8">
-                                            	<input id="totalLetras"  maxlength="100" readonly="readonly" value="<?= $cabeceraFB['totalLetras']; ?>" style="background-color: #d1d1d1;" />
-                                            </td>
-                                            <td>&nbsp;</td>
-                                        </tr>
-                                        <tr style="height:25px;">
                                             <td width="70">&nbsp;</td>
                                             <td width="70">Sub Total:</td>
                                         	<td>
-                                            	<input id="totalImporte"  maxlength="100" readonly="readonly" value="<?= $cabeceraFB['totalImporte']; ?>" style="background-color: #d1d1d1;" />
+                                            	<input id="totalImporte"  maxlength="100" readonly="readonly" value="<?= $cabeceraNota['totalImporte']; ?>" style="background-color: #d1d1d1;" />
                                             </td>
                                             <td width="70">&nbsp;</td>
 	                                        <td width="70">I.G.V. %:</td>
                                             <td>
-                                            	<input id="totalIGV"  maxlength="100" readonly="readonly" value="<?= $cabeceraFB['totalIGV']; ?>" style="background-color: #d1d1d1;" /></td>
+                                            	<input id="totalIGV"  maxlength="100" readonly="readonly" value="<?= $cabeceraNota['totalIGV']; ?>" style="background-color: #d1d1d1;" /></td>
                                             <td width="70">&nbsp;</td>
                                             <td width="70">Total Venta:</td>
                                             <td>
-                                            	<input id="totalVenta"  maxlength="100" readonly="readonly" value="<?= $cabeceraFB['totalVenta']; ?>" style="background-color: #d1d1d1;" /></td>
+                                            	<input id="totalVenta"  maxlength="100" readonly="readonly" value="<?= $cabeceraNota['totalVenta']; ?>" style="background-color: #d1d1d1;" /></td>
                                         	<td>&nbsp;</td>
                                         </tr>
                                    	</table>
@@ -336,15 +326,17 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
 </div>
 <!-- /.row -->
 
-                    <input type="hidden" id="idCabeceraFB" value="<?= $cabeceraFB['idCabeceraFB']; ?>" />
-                    <input type="hidden" id="idComprobantePago" value="<?= $cabeceraFB['idComprobantePago']; ?>" />
+                    <input type="hidden" id="idCabeceraNota" value="<?= $cabeceraNota['idCabeceraNota']; ?>" />
+                    <input type="hidden" id="idTipoNota" value="<?= $cabeceraNota['idTipoNota']; ?>" />
+                    <input type="hidden" id="tipoNota" value="<?= $cabeceraNota['tipoNota']; ?>" />
+                    <input type="hidden" id="idComprobantePagoRef" value="<?= $cabeceraNota['idComprobantePagoRef']; ?>" />
                     <input type="hidden" id="accion" value="<?= $accion; ?>" />
                    	
-                    <input type="hidden" id="idCliente"  value="<?= $cabeceraFB['idCliente']; ?>" />
-                    <input type="hidden" id="idDireccionActual"  value="<?= $cabeceraFB['idDireccionActual']; ?>" />
-                    <input type="hidden" id="idDepartamento" value="<?= $cabeceraFB['idDepartamento']; ?>" />
-                    <input type="hidden" id="idProvincia" value="<?= $cabeceraFB['idProvincia']; ?>" />
-                    <input type="hidden" id="idDistrito" value="<?= $cabeceraFB['idDistrito']; ?>" />
+                    <input type="hidden" id="idCliente"  value="<?= $cabeceraNota['idCliente']; ?>" />
+                    <input type="hidden" id="idDireccionActual"  value="<?= $cabeceraNota['idDireccionActual']; ?>" />
+                    <input type="hidden" id="idDepartamento" value="<?= $cabeceraNota['idDepartamento']; ?>" />
+                    <input type="hidden" id="idProvincia" value="<?= $cabeceraNota['idProvincia']; ?>" />
+                    <input type="hidden" id="idDistrito" value="<?= $cabeceraNota['idDistrito']; ?>" />
                     
                     
          
@@ -373,11 +365,14 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
     
     $(document).ready(function(){
 		
-		$("#serieNumeroFB").jqxInput({ width: '120px', height: '20px' });
-		$("#serieNumeroGRef").jqxInput({ width: '120px', height: '20px' });
+		$("#serieNumeroNota").jqxInput({ width: '120px', height: '20px' });
+		$("#serieNumeroCPRef").jqxInput({ width: '120px', height: '20px' });
 			
 		$("#fechaEmision").jqxDateTimeInput( {width: '100px', height: '20px', formatString: "dd/MM/yyyy" });
 		$("#fechaEmision").jqxDateTimeInput({ culture: 'es-ES' });
+		
+		$("#fechaEmisionCPRef").jqxDateTimeInput( {width: '100px', height: '20px', formatString: "dd/MM/yyyy" });
+		$("#fechaEmisionCPRef").jqxDateTimeInput({ culture: 'es-ES' });
 		
 		/*
 		$("#tipoVia").jqxInput({ width: '200px', height: '20px' });
@@ -395,7 +390,7 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
 		$("#numeroDocumentoIdentidad").jqxInput({ width: '150px', height: '20px' });
 		$("#direccionActual").jqxInput({ width: '900px', height: '20px' });
 		
-		$("#totalLetras").jqxInput({ width: '90%', height: '20px' });
+		//$("#totalLetras").jqxInput({ width: '90%', height: '20px' });
 		$("#totalImporte").jqxInput({ width: '150px', height: '20px', rtl: true });
 		$("#totalIGV").jqxInput({ width: '150px', height: '20px', rtl: true });
 		$("#totalVenta").jqxInput({ width: '150px', height: '20px', rtl: true });
@@ -405,7 +400,7 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
         });
 		
 		
-		var fechaEmision = "<?= $cabeceraFB['fechaEmision']; ?>";
+		var fechaEmision = "<?= $cabeceraNota['fechaEmision']; ?>";
 		if(fechaEmision !=""){
 			var fechaEmisionArray = fechaEmision.split('-');
 			$("#fechaEmision").jqxDateTimeInput('setDate', new Date(fechaEmisionArray[0], fechaEmisionArray[1]-1, fechaEmisionArray[2]));
@@ -417,26 +412,26 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
 			$("#fechaEmision").jqxDateTimeInput({ disabled: true });
 		}
 		
-		var idCabeceraFB = $("#idCabeceraFB").val();
+		var idCabeceraNota = $("#idCabeceraNota").val();
 		
-		$("#detalleFacturaBoletaDiv").html("<center><b>Actualizando informacion</b><br>Por favor espere...<br><img src='theme/images/loading.gif'></center>");
+		$("#detalleNotaDiv").html("<center><b>Actualizando informacion</b><br>Por favor espere...<br><img src='theme/images/loading.gif'></center>");
 
-        $("#detalleFacturaBoletaDiv").load("ventas/factura_boleta/detalleFacturaBoleta.php?p="+Math.random(), {idCabeceraFB: idCabeceraFB});
+        $("#detalleNotaDiv").load("ventas/nota/detalleNota.php?p="+Math.random(), {idCabeceraNota: idCabeceraNota});
     });
 	
 	
 	$("#btnNuevo").click(function () {
 		if (confirm(" Esta seguro de limpiar los datos del comprobante para crear uno nuevo ?")) {
-			Ir_A_Pagina('ventas/factura_boleta/cabeceraFacturaBoleta');
+			Ir_A_Pagina('ventas/nota/cabeceraNota');
 		}
 	});
 	
 	$("#btnGrabar").click(function () {
-		Grabar_Factura_Boleta();					
+		Grabar_Nota();					
 	});
 	
 	$("#btnRegresar").click(function () {
-		Ir_A_Pagina('ventas/factura_boleta/filtroFacturaBoleta');
+		Ir_A_Pagina('ventas/nota/filtroNota');
 	});	
 		
 
@@ -502,8 +497,8 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
 				
 								
 				Obtener_Direccion_Cliente(dataListaCliente.idDireccionActual, "ACT");
-			}else{
-				Mostrar_Mensaje_Notificacion("warning","Debe seleccionar una fila");
+			}else{				
+				Mostrar_Mensaje_Notificacion("warning","No se econtro la direccion actual del cliente");
 			}
 
 						
@@ -567,14 +562,18 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
 	}
 	
 	
-	function Validar_Cabecera_Factura_Boleta(){
+	function Validar_Cabecera_Nota(){
 		
-		if($.trim($("#cboComprobantePago").val()) == "" || $.trim($("#cboComprobantePago").val()) == "0"){
-			Mostrar_Mensaje_Notificacion("warning","Debe seleccionar el comprobante");
+		if($.trim($("#cboComprobantePagoRef").val()) == "" || $.trim($("#cboComprobantePagoRef").val()) == "0"){
+			Mostrar_Mensaje_Notificacion("warning","Debe seleccionar el comprobante de pago que modifica");
 			return false;	
 		}
-		if($.trim($("#cboFormaPago").val()) == "" || $.trim($("#cboFormaPago").val()) == "0"){
-			Mostrar_Mensaje_Notificacion("warning","Debe seleccionar la forma de pago");
+		if($.trim($("#serieNumeroCPRef").val()) == ""){
+			Mostrar_Mensaje_Notificacion("warning","Debe ingresar la S/N del comprobante de pago que modifica");
+			return false;	
+		}
+		if($.trim($("#cboMotivoNota").val()) == "" || $.trim($("#cboMotivoNota").val()) == "0"){
+			Mostrar_Mensaje_Notificacion("warning","Debe seleccionar el motivo");
 			return false;	
 		}
 		if($.trim($("#cboMoneda").val()) == "" || $.trim($("#cboMoneda").val()) == "0"){
@@ -585,27 +584,28 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
 			Mostrar_Mensaje_Notificacion("warning","Debe seleccionar el cliente");
 			return false;	
 		}
-		if($.trim($("#cboComprobantePago option:selected").text()) == "FACTURA" && $.trim($("#documentoIdentidad").val()) == "DNI"){
+		if($.trim($("#cboComprobantePagoRef option:selected").text()) == "FACTURA" && $.trim($("#documentoIdentidad").val()) == "DNI"){
 			Mostrar_Mensaje_Notificacion("warning","No se puede emitir FACTURA para el cliente con DNI");
 			return false;	
 		}
-		if($.trim($("#cboComprobantePago option:selected").text()) == "BOLETA" && $.trim($("#documentoIdentidad").val()) == "RUC"){
+		if($.trim($("#cboComprobantePagoRef option:selected").text()) == "BOLETA" && $.trim($("#documentoIdentidad").val()) == "RUC"){
 			Mostrar_Mensaje_Notificacion("warning","No se puede emitir BOLETA para el cliente con RUC");
 			return false;	
 		}
+		
 		return true;
 	}
 	
 	
 	
-	function Grabar_Factura_Boleta(){
+	function Grabar_Nota(){
 		
 		var accion = $("#accion").val();
 				
-		if(!Validar_Cabecera_Factura_Boleta()){
+		if(!Validar_Cabecera_Nota()){
 			return false;
 		}
-		if(!Validar_Detalle_Factura_Boleta()){
+		if(!Validar_Detalle_Nota()){
 			return false;
 		}		
 		
@@ -614,58 +614,62 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
         }
 		
 		
-		var cabecera_factura_boleta = 
+		var cabecera_nota = 
 		{
-			idCabeceraFB			: $.trim($("#idCabeceraFB").val()),
-			serieNumeroFB			: $.trim($("#serieNumeroFB").val()),
-			serieNumeroGRef			: $.trim($("#serieNumeroGRef").val()),
+			idCabeceraNota			: $.trim($("#idCabeceraNota").val()),
+			idTipoNota				: $.trim($("#idTipoNota").val()),
+			tipoNota				: $.trim($("#tipoNota").val()),
+			serieNumeroNota			: $.trim($("#serieNumeroNota").val()),
 			fechaEmision			: $.trim($("#fechaEmision").val()),
-			idComprobantePago		: $.trim($("#cboComprobantePago").val()),
-			comprobantePago			: $.trim($('select[name="cboComprobantePago"] option:selected').text()),
-			idFormaPago				: $.trim($("#cboFormaPago").val()),
-			formaPago				: $.trim($('select[name="cboFormaPago"] option:selected').text()),
-			idMoneda				: $.trim($("#cboMoneda").val()),
-			moneda					: $.trim($('select[name="cboMoneda"] option:selected').text()),
+			idComprobantePagoRef	: $.trim($("#cboComprobantePagoRef").val()),
+			comprobantePagoRef		: $.trim($('select[name="cboComprobantePagoRef"] option:selected').text()),
+			serieNumeroCPRef		: $.trim($("#serieNumeroCPRef").val()),
+			fechaEmisionCPRef		: $.trim($("#fechaEmisionCPRef").val()),
 			idCliente				: $.trim($("#idCliente").val()),
 			cliente					: $.trim($("#cliente").val()),
 			documentoIdentidad		: $.trim($("#documentoIdentidad").val()),
 			numeroDocumentoIdentidad: $.trim($("#numeroDocumentoIdentidad").val()),
 			idDireccionActual		: $.trim($("#idDireccionActual").val()),
 			direccionActual			: $.trim($("#direccionActual").val()),
-			totalLetras				: $.trim($("#totalLetras").val()),
+			idMotivoNota			: $.trim($("#cboMotivoNota").val()),
+			motivoNota				: $.trim($('select[name="cboMotivoNota"] option:selected').text()),
+			idMoneda				: $.trim($("#cboMoneda").val()),
+			moneda					: $.trim($('select[name="cboMoneda"] option:selected').text()),
 			totalImporte			: $.trim($("#totalImporte").val()),
 			totalIGV				: $.trim($("#totalIGV").val()),
 			totalVenta				: $.trim($("#totalVenta").val())
 		};
-		/*		
-		console.log("***INICIO CAB FB***");
-		console.log(cabecera_factura_boleta);
-		console.log("***FIN CAB FB***");
+		/*	
+		console.log("***INICIO CAB Nota***");
+		console.log(cabecera_nota);
+		console.log("***FIN CAB Nota***");
 		*/
-		Grabar_Cabecera_Factura_Boleta(accion, cabecera_factura_boleta);
+		Grabar_Cabecera_Nota(accion, cabecera_nota);
+		
+		//Grabar_Detalle_Nota("0", "1");
 		
 	}
 	
-	function Grabar_Cabecera_Factura_Boleta(accion, cabecera_factura_boleta){
+	function Grabar_Cabecera_Nota(accion, cabecera_nota){
 		//alert(accion);
 		$.ajax({
 			type: "POST",            
-			url: "ventas/factura_boleta/saveCabeceraFacturaBoleta.php?p="+Math.random(),
-			data: { accion: accion, cabecera_factura_boleta: cabecera_factura_boleta },
+			url: "ventas/nota/saveCabeceraNota.php?p="+Math.random(),
+			data: { accion: accion, cabecera_nota: cabecera_nota },
 			success: function(response){
 				/*
-				console.log("***INICIO CAB FB***");
+				console.log("***RPTA CAB Nota***");
 				console.log("accion: "+accion+" ****");
 				console.log(response);
-				console.log("***FIN CAB FB***");
+				console.log("***RPTA CAB Nota***");
 				*/
 				if (response.success) {
 					//console.log(response.data.entity);
 					//console.log(response.data.message);
-					//console.log(response.data.entity.idCabeceraFB);						
-					var idCabeceraFB = response.data.entity.idCabeceraFB;
-					//console.log("idCabeceraFB:"+idCabeceraFB);
-					Grabar_Detalle_Factura_Boleta(accion, idCabeceraFB);
+					//console.log(response.data.entity.idCabeceraNota);						
+					var idCabeceraNota = response.data.entity.idCabeceraNota;
+					//console.log("idCabeceraNota:"+idCabeceraNota);
+					Grabar_Detalle_Nota(accion, idCabeceraNota);
   
 				}else{
                     Mostrar_Mensaje_Notificacion("error","No se logro grabar la guia de remision");
@@ -679,50 +683,57 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
 		
 	}
 	
-	function Validar_Detalle_Factura_Boleta(){
+	function Validar_Detalle_Nota(){
 		
 		var totalFilas = parseInt($("#jqxGridDetalle").jqxGrid('getdatainformation').rowscount);
 		
 		if(totalFilas == "0"){
-			Mostrar_Mensaje_Notificacion("warning","Debe agregar productos y/o servicios al detalle.");
+			Mostrar_Mensaje_Notificacion("warning","Debe agregar un detalle.");
 			return false;
 		}
-		/*
+		
 		for(i=0; i<totalFilas; i++){
 			var rowId = $("#jqxGridDetalle").jqxGrid('getrowid', i);
 			var rowGrid = $("#jqxGridDetalle").jqxGrid('getrowdatabyid', rowId);
-			if( $.trim(rowGrid['cantidad']) == 0 ){
-				Mostrar_Mensaje_Notificacion("warning","Debe ingresar la cantidad del producto "+ $.trim(rowGrid['descripcion']) +" en el detalle.");
+			if( $.trim(rowGrid['descripcion']) == "" ){
+				Mostrar_Mensaje_Notificacion("warning","Debe ingresar la descripcion en el detalle.");
+				//Mostrar_Mensaje_Notificacion("warning","Debe ingresar la descripcion "+ $.trim(rowGrid['descripcion']) +" en el detalle.");
+				return false;
+			}
+			if( $.trim(rowGrid['importe']) == "" || $.trim(rowGrid['importe']) == "0" || $.trim(rowGrid['importe']) == "0.00" ){
+				Mostrar_Mensaje_Notificacion("warning","Debe ingresar el importe en el detalle.");
+				//Mostrar_Mensaje_Notificacion("warning","Debe ingresar la descripcion "+ $.trim(rowGrid['descripcion']) +" en el detalle.");
 				return false;
 			}
 		}
-		*/		
+		
 		return true;
 	}
 	
-	function Grabar_Detalle_Factura_Boleta(accion, idCabeceraFB){
+	function Grabar_Detalle_Nota(accion, idCabeceraNota){
 		
 		var dataDetalle = Obtener_Data_Grid("jqxGridDetalle");
-		//console.log(dataDetalle);
+		console.log(dataDetalle);
 		//var exportedXML = JSON.parse($("#jqxGridDetalle").jqxGrid("exportdata", "json"));
 		//console.log(exportedXML);
 		
 		$.ajax({
 			type: "POST",
-			url : "ventas/factura_boleta/saveDetalleFacturaBoleta.php?p="+Math.random(),
-			data : {accion: accion,  idCabeceraFB: idCabeceraFB, dataDetalle: dataDetalle},
+			url : "ventas/nota/saveDetalleNota.php?p="+Math.random(),
+			data : {accion: accion,  idCabeceraNota: idCabeceraNota, dataDetalle: dataDetalle},
 			success: function(response){
 				/*
-				console.log("***INICIO DET FB***");
+				console.log("***INICIO DET Nota***");
 				console.log("accion: "+accion+" ****");
 				console.log(response);
-				console.log("***FIN DET FB***");
+				console.log("***FIN DET Nota***");
 				*/
+				
 				if (response.success) {
-					Mostrar_Mensaje_Notificacion("success","Se grabo la factura/boleta satisfactoriamente");
-					Ir_A_Pagina('ventas/factura_boleta/filtroFacturaBoleta');
+					Mostrar_Mensaje_Notificacion("success","Se grabo la nota satisfactoriamente");
+					Ir_A_Pagina('ventas/nota/filtroNota');
 				}else{
-                    Mostrar_Mensaje_Notificacion("error","Ocurrio un error al generar el detalle de la factura/boleta");
+                    Mostrar_Mensaje_Notificacion("error","Ocurrio un error al generar el detalle de la nota");
 				}
 				
 			},
@@ -733,121 +744,6 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
 		
 		
 	}
-	
-	
-	
-	/*
-	function Actualizar_DataGR(){
-		generarGR = $.trim($("#generarGRCab").val());
-				
-		if(generarGR == "1"){
-			$("#seccionGRDiv").show();
-			$("#seccionGRDiv").load("ventas/factura_boleta/seccionGR.php?p="+Math.random());
-			
-		}else{
-			$("#seccionGRDiv").html("");
-		}		
-	}
-	
 
-    function Actualizar_Provincia_PAR(){
-        var tabla = "provincia";
-        var nombreCampoPadre = "idDepartamento";
-        var valorIdPadre = $("#cboDepartamentoPAR").val();
-        var nombreIdPrincipal = "idProvincia";
-        var nombreCampoDescripcion = "provincia";
-       
-       	$("#cboDistritoPAR").html("");
-       	$("#cboDistritoPAR").append("<option value='0'>[SELECCIONAR]</option>");
-        
-        $.ajax({
-	  		type: "POST",
-	   		url : "comunes/combos/dataComboUbigeoDependiente.php?p="+Math.random(),
-            data: {tabla:tabla, nombreCampoPadre:nombreCampoPadre, valorIdPadre:valorIdPadre, nombreIdPrincipal:nombreIdPrincipal,nombreCampoDescripcion:nombreCampoDescripcion},
-            //url: "maestros/distrito/cmbProvincias.php?p="+Math.random(),
-	   		//data: {idDepartamento:idDepartamento},            
-	   		success: function(dataResult){
-                //console.log(dataResult);
-                $("#cboProvinciaPAR").html("");
-                $("#cboProvinciaPAR").append(dataResult);
-	   		},
-	   		error: function(){
-	   			alert("Se ha producido un error");
-	   		}
-	 	});
-    }
-                                        
-    function Actualizar_Distrito_PDA(){
-        var tabla = "distrito";
-        var nombreCampoPadre = "idProvincia";
-        var valorIdPadre = $("#cboProvinciaPAR").val();
-        var nombreIdPrincipal = "idDistrito";
-        var nombreCampoDescripcion = "distrito";
-       
-        $.ajax({
-	  		type: "POST",
-	   		url : "comunes/combos/dataComboUbigeoDependiente.php?p="+Math.random(),
-            data: {tabla:tabla, nombreCampoPadre:nombreCampoPadre, valorIdPadre:valorIdPadre, nombreIdPrincipal:nombreIdPrincipal,nombreCampoDescripcion:nombreCampoDescripcion},            
-	   		success: function(dataResult){
-                console.log(dataResult);
-                $("#cboDistritoPAR").html("");
-                $("#cboDistritoPAR").append(dataResult);
-	   		},
-	   		error: function(){
-	   			alert("Se ha producido un error");
-	   		}
-	 	});
-    }	
-
-    function Actualizar_Provincia_LLE(){
-        var tabla = "provincia";
-        var nombreCampoPadre = "idDepartamento";
-        var valorIdPadre = $("#cboDepartamentoLLE").val();
-        var nombreIdPrincipal = "idProvincia";
-        var nombreCampoDescripcion = "provincia";
-       
-       $("#cboDistritoLLE").html("");
-       $("#cboDistritoLLE").append("<option value='0'>[SELECCIONAR]</option>");
-         
-       
-        $.ajax({
-	  		type: "POST",
-	   		url : "comunes/combos/dataComboUbigeoDependiente.php?p="+Math.random(),
-            data: {tabla:tabla, nombreCampoPadre:nombreCampoPadre, valorIdPadre:valorIdPadre, nombreIdPrincipal:nombreIdPrincipal,nombreCampoDescripcion:nombreCampoDescripcion},
-            //url: "maestros/distrito/cmbProvincias.php?p="+Math.random(),
-	   		//data: {idDepartamento:idDepartamento},            
-	   		success: function(dataResult){
-                //console.log(dataResult);
-                $("#cboProvinciaLLE").html("");
-                $("#cboProvinciaLLE").append(dataResult);
-	   		},
-	   		error: function(){
-	   			alert("Se ha producido un error");
-	   		}
-	 	});
-    }
-                                        
-    function Actualizar_Distrito_LLE(){
-        var tabla = "distrito";
-        var nombreCampoPadre = "idProvincia";
-        var valorIdPadre = $("#cboProvinciaLLE").val();
-        var nombreIdPrincipal = "idDistrito";
-        var nombreCampoDescripcion = "distrito";
-       
-        $.ajax({
-	  		type: "POST",
-	   		url : "comunes/combos/dataComboUbigeoDependiente.php?p="+Math.random(),
-            data: {tabla:tabla, nombreCampoPadre:nombreCampoPadre, valorIdPadre:valorIdPadre, nombreIdPrincipal:nombreIdPrincipal,nombreCampoDescripcion:nombreCampoDescripcion},            
-	   		success: function(dataResult){
-                console.log(dataResult);
-                $("#cboDistritoLLE").html("");
-                $("#cboDistritoLLE").append(dataResult);
-	   		},
-	   		error: function(){
-	   			alert("Se ha producido un error");
-	   		}
-	 	});
-	}
-	*/
             
 </script>

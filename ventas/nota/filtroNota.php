@@ -20,7 +20,7 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
     <div class="col-lg-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <b>Listado de Guia de Remision</b>
+                <b>Listado de Nota Credito / Debito</b>
             </div>
             <!-- /.panel-heading -->
             <div class="panel-body">
@@ -32,22 +32,50 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
                                 <div class="panel-body">
 
                                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                                        <tr style="height:30px;">    
+                                        <tr style="height:30px;">
                                     		<td width="70">Fecha Desde:</td>
                                        		<td width="100">
                                                 <div id="fechaDesdeDiv">
                                                     <div style='margin-top: 3px;' id='fechaDesde' />
                                                 </div>
                                             </td>
-                                            <td width="10">&nbsp;</td>    
+                                            <td width="10">&nbsp;</td>
                                     		<td width="70">Fecha Hasta:</td>
                                        		<td width="100">
                                                 <div id="fechaHastaDiv">
                                                     <div style='margin-top: 3px;' id='fechaHasta' />
-                                                </div>                                            
+                                                </div>
                                             </td>
                                             <td width="10">&nbsp;</td>
-                                    		<td width="70">Estado:</td>
+                                    		<td width="70">Tipo de Nota:</td>
+                                       		<td width="150">
+                                            	<select id="cboTipoNotaFiltro" name="cboTipoNotaFiltro" style="width:150px;">
+                                                  <!--<option value="0">[SELECCIONAR]</option>	-->
+                                                    <?php
+                                                        $rsListaTipoNota= $objdb -> sqlListaTipoNota($idEmpresa, "U");
+                                                        if (mysql_num_rows($rsListaTipoNota)!=0){
+                                                        	while ($rowTipoNota = mysql_fetch_array($rsListaTipoNota)){
+                                                        		$idTipoNotaX = $rowTipoNota["idTipoNota"];
+                                                        		$tipoNotaX = $rowTipoNota["tipoNota"];
+                                                        		
+                                                        		if($idTipoNotaX==$idTipoNota){
+                                                        ?>			
+                                                        			<option value="<?= $idTipoNotaX; ?>" selected="selected"><?= $tipoNotaX; ?></option>
+                                                        <?php	
+                                                        		}else{
+                                                        ?>			
+                                                        			<option value="<?= $idTipoNotaX; ?>" ><?= $tipoNotaX; ?></option>
+                                                        <?php										
+                                                        		}
+                                                        	
+                                                        	}
+                                                        	mysql_free_result($rsListaTipoNota);
+                                                        }
+                                                    ?>
+                                                </select>
+                                            </td>
+                                            <td width="10">&nbsp;</td>
+                                            <td width="70">Estado:</td>
                                        		<td width="200">
                                             	<select id="cboEstadoFiltro" name="cboEstadoFiltro" style="width:150px;">
                                                   <option value="T">[TODOS]</option>	
@@ -73,9 +101,8 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
                                                         }
                                                     ?>
                                                 </select>
-                                            </td> 
-                                            <td width="100">&nbsp;</td> 
-                                            <td width="100">&nbsp;</td>                                           
+                                            </td>
+                                            <td>&nbsp;</td>                           
                                         </tr>
                                         <tr style="height:30px;">
    											<td>Serie-Numero:</td>
@@ -86,7 +113,9 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
                                             <td>Cliente:</td>
                                        		<td colspan="4">
                                             	<input  id="clienteFiltro"  maxlength="100" style="width:350px;" onkeypress="Enter_Buscar(event);" />
-                                            </td>                                            
+                                            </td>           
+                                            <td>&nbsp;</td>
+                                            <td>&nbsp;</td>
                                             <td>&nbsp;</td>
                                             <td width="80">
                                           		<div style="padding:5px;">
@@ -94,9 +123,9 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
                                                     	<i class="icon-search"></i> Buscar</button>
                                                 </div>
                                             </td>                                           
-                                        </tr>
+                                        </tr>	
                                      </table>
-                                </div>
+                                </div>																																																				
                             </div>
                         </div>
                         <!-- /.col-lg-12 -->
@@ -136,8 +165,6 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
 	exit();
 }
 ?>
-
-
 <script type="text/javascript">
     
     $(document).ready(function(){
@@ -151,7 +178,7 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
 		$("#clienteFiltro").jqxInput({  width: '400px', height: '20px' });
         
 		$('.solo-numero').keyup(function (){             
-            this.value = (this.value + '').replace(/[^0-9]/g, '');           
+            this.value = (this.value + '').replace(/[^0-9]/g, '');
         });
 		
 		Buscar_Resultados();
@@ -165,10 +192,12 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
 	}
 	
     function Buscar_Resultados() {
-		
+			
         var filtro = {
             fechaDesde: $.trim($("#fechaDesde").val()),
 			fechaHasta: $.trim($("#fechaHasta").val()),
+			idTipoNota: $.trim($("#cboTipoNotaFiltro").val()),
+			tipoNota: $.trim($( "#cboTipoNotaFiltro option:selected" ).text()),
 			serieNumero: $.trim($("#serieNumeroFiltro").val()),
 			cliente: $.trim($("#clienteFiltro").val()),
 			idEstado: $.trim($("#cboEstadoFiltro").val()),
@@ -177,7 +206,7 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
     
         $("#resultadoFiltroDiv").html("<center><b>Actualizando informacion</b><br>Por favor espere...<br><img src='theme/images/loading.gif'></center>");
 
-        $("#resultadoFiltroDiv").load("ventas/guia_remision/listaGuiaRemision.php?p="+Math.random(), { filtro: filtro });
+        $("#resultadoFiltroDiv").load("ventas/nota/listaNota.php?p="+Math.random(), { filtro: filtro });
 		            
     }
 		

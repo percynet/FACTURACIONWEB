@@ -559,7 +559,11 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
 	
 	function Obtener_Numero_A_Letras(){
 		
-		var totalVentaNumero = $("#totalVenta").val();
+		var totalVentaNumero = $("#totalVenta").val();		
+		if(totalVentaNumero == "0.00"){
+			$("#totalLetras").val("");
+			return false;	
+		}
 
 		$.ajax({
 			type: "POST",
@@ -573,7 +577,7 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
 				$("#totalLetras").val(result);
 			},
 			error: function(){
-				alert("Se ha producido un error");
+				Mostrar_Mensaje_Notificacion("error","Se ha producido un error");
 			}
 		})	
 			
@@ -621,16 +625,14 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
 		var totalIGV = 0;
 		var totalVenta = 0;
 		
-		//var comprobante = $.trim($("#cboComprobantePago").val());
 		var comprobante = $.trim($('select[name="cboComprobantePago"] option:selected').text());
 		
-		//alert(comprobante);
 		if(comprobante == "FACTURA"){
 			porcIgv = 0.18;				//solo para facturas
 		}
 		
 		var rowscount = $("#jqxGridDetalle").jqxGrid('getdatainformation').rowscount;
-		//alert("counts:"+rowscount);
+
 		for(i=0; i<rowscount; i++){
 			var rowId = $('#jqxGridDetalle').jqxGrid('getrowid', i);
 			var rowDetalle = $('#jqxGridDetalle').jqxGrid('getrowdatabyid', rowId);

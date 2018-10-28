@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Sistema Web</title>
+    <title>Facturacion Web</title>
 
     <link href="theme/css/style.css" rel="stylesheet" />
     
@@ -86,18 +86,18 @@
         $("#containerMain").load(pagina+".php?p="+Math.random(), { parametros : parametros});
     }	
 	
-	function Iniciar_Session(){	   
+	function Iniciar_Session(){
 		var usuario = $("#usuario").val();
 		var password = $("#password").val();
 
 		if(usuario == ""){
-			alert("Ingrese su usuario");
+			Mostrar_Mensaje_Notificacion("warning","Ingrese su usuario");
 			$("#usuario").focus();
 			return false;
 		}
 		
 		if(password == ""){
-			alert("Ingrese su password");
+			Mostrar_Mensaje_Notificacion("warning","Ingrese su password");
 			$("#password").focus();
 			return false;
 		}
@@ -181,8 +181,8 @@
 			document.close();
 			newWindow.print();
 		
-		}else{
-			alert("No se encontraron datos para la impresion");
+		}else{			
+			Mostrar_Mensaje_Notificacion("warning","No se encontraron datos para la impresion");
 		}
 	}    
 	
@@ -201,7 +201,8 @@
 		}
 	
 		if(letras.indexOf(tecla) == -1 && !tecla_especial){
-			alert('Este campo solo permite letras');
+			//alert('Este campo solo permite letras');
+			Mostrar_Mensaje_Notificacion("warning","Este campo solo permite letras");
 			return false;
 		}
 	}
@@ -302,7 +303,7 @@
 	}
 	
 	
-	
+	/*
 	function createCenterPosWindow(){
         var html = '<div id="myCenterPosWindow">' +
                    '<div id="title">@Center</div>' +
@@ -345,7 +346,7 @@
                    '<div id="content"></div>' +
                    '</div>';
         $(document.body).append(html);
-        /*
+        
          * This position just doesn't work
          * I tried:
          *   position: 'right-bottom'
@@ -359,11 +360,11 @@
          *   position: ['bottom', 'right']
          *   position: ['right', 'bottom']
          *   position: {x: 'right', y: 'bottom'}
-         */
+         
         $('#myRightBottomPosWindow').jqxWindow({width: '200px', height: '100px', autoOpen: false, resizable: false, position: 'right-bottom'});
         $('#myRightBottomPosWindow').jqxWindow('open');
 	};
-      
+    */
 	 
     </script>
 </head>
@@ -400,7 +401,6 @@
     <div id="messageNotification">
         <div id="textNotification"></div>
     </div>
-																																																																																																																																																																																																																																									
 </body>
 
 </html>

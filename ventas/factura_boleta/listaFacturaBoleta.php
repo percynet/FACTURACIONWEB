@@ -49,7 +49,9 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
             fechaDesde: $.trim($("#fechaDesde").val()),
 			fechaHasta: $.trim($("#fechaHasta").val()),			
 			serieNumero: $.trim($("#serieNumeroFiltro").val()),
-			cliente: $.trim($("#clienteFiltro").val())
+			cliente: $.trim($("#clienteFiltro").val()),
+			idEstado: $.trim($("#cboEstadoFiltro").val()),
+			estado: $.trim($("#cboEstadoFiltro option:selected").text())
         };
 		  
 		var source = 

@@ -121,7 +121,7 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
         var idAlmacenNuevo = $.trim($("#idAlmacenNuevo").val());
 		
         if($.trim($("#cboAlmacenNuevo").val())=="0"){
-            alert("Debe seleccionar el almacen");
+			Mostrar_Mensaje_Notificacion("warning","Debe seleccionar el almacen");
             $("#cboAlmacenNuevo").focus();
             return false;
         }
@@ -129,7 +129,7 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
         $("#idComprobanteNuevo").val($("#cboComprobanteNuevo").val());		        
         //var idComprobante = $.trim($("#idComprobanteNuevo").val());        
         if($.trim($("#cboComprobanteNuevo").val())=="0"){
-            alert("Debe seleccionar el comprobante que se creara");
+			Mostrar_Mensaje_Notificacion("warning","Debe seleccionar el comprobante");
             $("#idComprobanteNuevo").focus();
             return false;
         }

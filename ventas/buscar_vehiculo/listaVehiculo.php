@@ -150,7 +150,7 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
 	
 	
     
-  	
+  	/*
 	function TestLista(){
 	   
 		var filtro = {            
@@ -176,5 +176,6 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
 			}
 		})	
 	}
+	*/
 	
 </script>

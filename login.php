@@ -120,7 +120,8 @@ if(!$bContinue){
 		<?php
 			if($sError != ""){
 		?>
-				alert('Usuario no valido');
+				//alert('Usuario no valido');
+				Mostrar_Mensaje_Notificacion("warning","Usuario no valido");
 				$("#usuario").focus();
 		<?php
 			}

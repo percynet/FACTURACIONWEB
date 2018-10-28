@@ -2,3 +2,6 @@
    width:100%; 
    margin:0 auto;
 }
+.text_readyonly {
+   background-color : #d1d1d1;
+}

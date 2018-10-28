@@ -10,18 +10,18 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
 	//$idAlmacen = $_SESSION['ALMACEN']['idAlmacen'];
     
     if(isset($_POST['filtro'])){
-        
+        							
 		$filtro = $_POST['filtro'];
 
 ?>
 
-		<div id="jqxGridListaGuiaRemision"></div>
+		<div id="jqxGridListaNota"></div>
 
         <input type="hidden" id="accion" />
 
-        <div id="popupGuiaRemisionDiv">
+        <div id="popupNotaDiv">
             <div style="overflow: hidden;"></div>
-            <div id="formGuiaRemisionDiv"></div>
+            <div id="formNotaDiv"></div>
         </div>
 
 <?php
@@ -43,11 +43,13 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
 
 	$(document).ready(function(){
         
-		$("#jqxGridListaGuiaRemision").jqxGrid('clear');
+		$("#jqxGridListaNota").jqxGrid('clear');
 		
 		var filtro = {
-			fechaDesde: $.trim($("#fechaDesde").val()),
+            fechaDesde: $.trim($("#fechaDesde").val()),
 			fechaHasta: $.trim($("#fechaHasta").val()),
+			idTipoNota: $.trim($("#cboTipoNotaFiltro").val()),
+			tipoNota: $.trim($( "#cboTipoNotaFiltro option:selected" ).text()),
 			serieNumero: $.trim($("#serieNumeroFiltro").val()),
 			cliente: $.trim($("#clienteFiltro").val()),
 			idEstado: $.trim($("#cboEstadoFiltro").val()),
@@ -58,19 +60,20 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
 		{
 			datatype: "json",            
 			datafields: [
-				{ name: 'idCabeceraGR'},				
+				{ name: 'idCabeceraNota'},				
 				{ name: 'fechaEmision', type: 'date', format: 'yyyy-MM-dd'},
-				{ name: 'fechaTraslado', type: 'date', format: 'yyyy-MM-dd'},
-				{ name: 'serieNumero', type: 'string'},				
-				{ name: 'clienteRemitente', type: 'string'},
-				{ name: 'documentoIdentidad', type: 'string'},
-				{ name: 'numeroDocumentoIdentidad', type: 'string'}
+				{ name: 'tipoNota', type: 'string'},
+				{ name: 'serieNumeroNota', type: 'string'},
+				{ name: 'comprobantePagoRef', type: 'string'},
+				{ name: 'cliente', type: 'string'},
+				{ name: 'moneda', type: 'string'},
+				{ name: 'totalVenta', type: 'string'}
 				//{ name: 'estado', type: 'string'}
 			],
             sortname: 'estado',
 			type: "POST",
 			data: { filtro: filtro },
-			url: "ventas/guia_remision/dataListaGuiaRemision.php?p="+Math.random(),
+			url: "ventas/nota/dataListaNota.php?p="+Math.random(),
 			cache: false
 		};
         
@@ -83,16 +86,15 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
                 }
        	});
 
-		$("#jqxGridListaGuiaRemision").jqxGrid(
+		$("#jqxGridListaNota").jqxGrid(
 		{
             source: dataAdapter,   
-            //ide: 'idCabeceraGR',
+            //ide: 'idCabeceraNota',
             width: '100%',
 			height: '350px',
             pageable: true,
             pagerButtonsCount: 10,
             showtoolbar: true,
-            selectionmode: 'singlerow',
             //editable: true,
             editmode: 'selected cell click',
             rendertoolbar: function (toolbar) {
@@ -101,65 +103,78 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
                 toolbar.append(container);
 				//container.append('<button id="btnEditar" type="button" class="btn" ><i class="icon-pencil"></i>&nbsp;Editar</button>&nbsp;');
 				//container.append('<button id="btnAbrir" type="button" class="btn btn-success" ><i class="fa fa-share"></i>&nbsp;Abrir</button>&nbsp;');
+            selectionmode: 'singlerow',
 				container.append('<button id="btnNuevo" type="button" class="btn btn-info" ><i class="fa fa-ok"></i>&nbsp;Nuevo</button>&nbsp;');  
                 container.append('<button id="btnEditar" type="button" class="btn btn-warning" ><i class="fa fa-remove"></i>&nbsp;Editar</button>&nbsp;'); 
-                //container.append('<button id="btnEliminar" type="button" class="btn btn-danger" ><i class="fa fa-remove"></i>&nbsp;Eliminar</button>&nbsp;'); 
+                //container.append('<button id="btnEliminar" type="button" class="btn btn-danger" ><i class="fa fa-remove"></i>&nbsp;Eliminar</button>&nbsp;');
 				//container.append('<button id="btnImprimir" type="button" class="btn" ><i class="fa-print"></i>&nbsp;Imprimir</button>&nbsp;');
 				container.append('<button id="btnImprimirLista" type="button" class="btn btn-success" ><i class="fa fa-print"></i>&nbsp;Imprimir Lista</button>&nbsp;'); 
 				
 				$("#btnNuevo").on('click', function () {
 					var accion = "0";
-					var idCabeceraGR = "0";
-					$("#containerMain").load('ventas/guia_remision/cabeceraGuiaRemision'+".php?p="+Math.random(), {accion:accion, idCabeceraGR: idCabeceraGR} );
-					//Ir_A_Pagina('ventas/guia_remision/cabeceraGuiaRemision');
+					var idCabeceraNota = "0";
+					var idTipoNota = $("#cboTipoNotaFiltro").val();
+					var tipoNota = $("#cboTipoNotaFiltro option:selected").text();
+					
+					if(idTipoNota == "0"){
+						Mostrar_Mensaje_Notificacion("warning","Debe seleccionar un tipo de nota");
+						return false;
+					}
+					$("#containerMain").load('ventas/nota/cabeceraNota'+".php?p="+Math.random(), 
+						{accion:accion, idCabeceraNota: idCabeceraNota, idTipoNota: idTipoNota, tipoNota: tipoNota} );
+					//Ir_A_Pagina('ventas/nota/cabeceraNota');
 				});
 				
 				$("#btnEditar").on('click', function () {
 					var accion = "1";
-					var idCabeceraGR = Obtener_Comprobante_Venta_Fila();					
+					var idCabeceraNota = Obtener_Nota_Fila();					
+					var idTipoNota = $("#cboTipoNotaFiltro").val();
+					var tipoNota = $("#cboTipoNotaFiltro option:selected").text();
 					
-					if(idCabeceraGR == "0"){
+					if(idCabeceraNota == "0"){
 						Mostrar_Mensaje_Notificacion("warning","Debe seleccionar una fila");
 						return false;
 					}
-					$("#containerMain").load('ventas/guia_remision/cabeceraGuiaRemision'+".php?p="+Math.random(), {accion: accion, idCabeceraGR: idCabeceraGR} );
-				    //Ir_A_Pagina_Con_Parametros('ventas/guia_remision/cabeceraGuiaRemision', parametros);
+					$("#containerMain").load('ventas/nota/cabeceraNota'+".php?p="+Math.random(), 
+						{accion:accion, idCabeceraNota: idCabeceraNota, idTipoNota: idTipoNota, tipoNota: tipoNota} );
+				    //Ir_A_Pagina_Con_Parametros('ventas/nota/cabeceraNota', parametros);
 				});
                 /*
                 $("#btnEliminar").on('click', function () {
-					Eliminar_Comprobante_Venta();
+					Eliminar_Nota();
 				});
 				*/
 				$("#btnImprimirLista").on('click', function () {
-					Imprimir_Lista_Resultados("jqxGridListaGuiaRemision", "Listado de GuiaRemisions");
+					Imprimir_Lista_Resultados("jqxGridListaNota", "Listado de Notas");
 				});
 			},	
             ready: function () {
-                $("#jqxGridListaGuiaRemision").jqxGrid('hidecolumn', 'idCabeceraGR');
+                $("#jqxGridListaNota").jqxGrid('hidecolumn', 'idCabeceraNota');
             },
 			columns: [
-				{ text: 'ID', datafield: 'idCabeceraGR', width: '0%'},
+				{ text: 'ID', datafield: 'idCabeceraNota', width: '0%'},
 				{ text: 'Fecha Emision', datafield: 'fechaEmision', width: '10%', cellsalign: 'center', cellsformat: 'dd/MM/yyyy' },
-				{ text: 'Fecha Traslado', datafield: 'fechaTraslado', width: '10%', cellsalign: 'center', cellsformat: 'dd/MM/yyyy' },
-				{ text: 'Serie-Numero', datafield: 'serieNumero', width: '20%'},
-				{ text: 'Cliente Remitente', datafield: 'clienteRemitente', width: '40%'},
-				{ text: 'Doc.Ident.', datafield: 'documentoIdentidad', width: '10%'},
-				{ text: 'Nro Doc.Ident.', datafield: 'numeroDocumentoIdentidad', width: '10%'}
+				{ text: 'Tipo Nota', datafield: 'tipoNota', width: '10%'},
+				{ text: 'S/N Nota', datafield: 'serieNumeroNota', width: '10%'},
+				{ text: 'Comprobante', datafield: 'comprobantePagoRef', width: '10%'},
+				{ text: 'Cliente', datafield: 'cliente', width: '40%'},				
+				{ text: 'Moneda', datafield: 'moneda', width: '10%'},
+				{ text: 'Total Venta', datafield: 'totalVenta', width: '10%'}
 				//{ text: 'Estado', datafield: 'estado', width: '6%'}
 			]
 		});
 		
         // display selected row index.
-        $("#jqxGridListaGuiaRemision").on('rowselect', function (event) {
+        $("#jqxGridListaNota").on('rowselect', function (event) {
             $("#selectrowindex").text(event.args.rowindex);
         });
 
         // display unselected row index.
-        $("#jqxGridListaGuiaRemision").on('rowunselect', function (event) {
+        $("#jqxGridListaNota").on('rowunselect', function (event) {
             $("#unselectrowindex").text(event.args.rowindex);
         });
         
-        $("#jqxGridListaGuiaRemision").on("cellclick", function (event){
+        $("#jqxGridListaNota").on("cellclick", function (event){
             var column = event.args.column;
             var rowindex = event.args.rowindex;
             var columnindex = event.args.columnindex;
@@ -170,90 +185,92 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
 	});
 
 
-	$("#popupGuiaRemisionDiv").jqxWindow({
+	$("#popupNotaDiv").jqxWindow({
 		width: "350", height:"220", resizable: false,  isModal: true, autoOpen: false, okButton: $('#btnAceptar'),
 		cancelButton: $("#btnCancelar"), modalOpacity: 0.25
 	});
 	
-	$("#popupGuiaRemisionDiv").on('open', function () {
+	$("#popupNotaDiv").on('open', function () {
 		Limpiar_Popups();
 		
-		$("#formGuiaRemisionDiv").load("ventas/guia_remision/nuevoGuiaRemision.php?p="+Math.random());
+		$("#formNotaDiv").load("ventas/nota/nuevoNota.php?p="+Math.random());
         
 	});	
 	
-	function Abrir_Popup_Nuevo_Comprobante_Venta(){
+	function Abrir_Popup_Nuevo_Nota(){
 		Limpiar_Popups();
 
-        $('#popupGuiaRemisionDiv').jqxWindow('setTitle', 'Nuevo Comprobante de Venta');
-        $("#popupGuiaRemisionDiv").jqxWindow('open');
+        $('#popupNotaDiv').jqxWindow('setTitle', 'Nueva Nota');
+        $("#popupNotaDiv").jqxWindow('open');
         
         return true;
 	}
 
-	function Cerrar_Popup_Comprobante_Venta(){
-		$("#popupGuiaRemisionDiv").jqxWindow('hide');
+	function Cerrar_Popup_Nota(){
+		$("#popupNotaDiv").jqxWindow('hide');
 		Limpiar_Popups();
 	}
 	
 	function Limpiar_Popups(){
-		$("#formGuiaRemisionDiv").html("");
+		$("#formNotaDiv").html("");
 	}
 
-    function Obtener_Comprobante_Venta_Fila(){
-        var idCabeceraGR = "0";
-		var rowscount = $("#jqxGridListaGuiaRemision").jqxGrid('getdatainformation').rowscount;
-		var selectedrowindex = $("#jqxGridListaGuiaRemision").jqxGrid('getselectedrowindex');
+    function Obtener_Nota_Fila(){
+        var idCabeceraNota = "0";
+		var rowscount = $("#jqxGridListaNota").jqxGrid('getdatainformation').rowscount;
+		var selectedrowindex = $("#jqxGridListaNota").jqxGrid('getselectedrowindex');
 		if (selectedrowindex >= 0 && selectedrowindex < rowscount) {
-			var id = $("#jqxGridListaGuiaRemision").jqxGrid('getrowid', selectedrowindex);
-			var dataListaGuiaRemision = $("#jqxGridListaGuiaRemision").jqxGrid('getrowdata', selectedrowindex);
-            idCabeceraGR = dataListaGuiaRemision.idCabeceraGR;
+			var id = $("#jqxGridListaNota").jqxGrid('getrowid', selectedrowindex);
+			var dataListaNota = $("#jqxGridListaNota").jqxGrid('getrowdata', selectedrowindex);
+            idCabeceraNota = dataListaNota.idCabeceraNota;
 		}
         
-        return idCabeceraGR;
+        return idCabeceraNota;
     }
     
-    function Eliminar_Comprobante_Venta(){
-        var idCabeceraGR = Obtener_Comprobante_Venta_Fila();
-        if(idCabeceraGR == "0"){
+    function Eliminar_Nota(){
+        var idCabeceraNota = Obtener_Nota_Fila();
+        if(idCabeceraNota == "0"){
             Mostrar_Mensaje_Notificacion("warning","Debe seleccionar una fila");
             return false;
         }
         
-        if(!confirm(" Esta seguro de eliminar al guia_remision ?")){
+        if(!confirm(" Esta seguro de eliminar al nota ?")){
             return false;
         }
         
         $.ajax({
 			type: "POST",
-			url : "ventas/guia_remision/deleteGuiaRemision.php?p="+Math.random(),
-			data : { idCabeceraGR: idCabeceraGR },
+			url : "ventas/nota/deleteNota.php?p="+Math.random(),
+			data : { idCabeceraNota: idCabeceraNota },
 			success: function(result){
                
 				if(result == 1){
-                    Mostrar_Mensaje_Notificacion("success","Se elimino al guia_remision satisfactoriamente");
-					$("#jqxGridListaGuiaRemision").jqxGrid('updatebounddata', 'cells');
+					Mostrar_Mensaje_Notificacion("sucess","Se elimino la fila satisfactoriamente");
+                    
+					$("#jqxGridListaNota").jqxGrid('updatebounddata', 'cells');
   
 				}else{
-					Mostrar_Mensaje_Notificacion("error","Ocurrio un error al grabar al guia_remision")
+                    Mostrar_Mensaje_Notificacion("error","Ocurrio un error al grabar la nota");
 				}
 				
 			},
 			error: function(){
-				Mostrar_Mensaje_Notificacion("error","Se ha producido un error. No puede continuar con el proceso.");
+				Mostrar_Mensaje_Notificacion("error","Se ha producido un error");
 			}
 		});
         
     }
 
 	
-   	function Imprimir(idCabeceraGR){
+   	function Imprimir(idCabeceraNota){
 		
-		var newWindow = window.open("ventas/guia_remision/impresionGuiaRemision.php?idCabeceraGR="+idCabeceraGR,
+		var newWindow = window.open("ventas/nota/impresionNota.php?idCabeceraNota="+idCabeceraNota,
 									"sub","HEIGHT=200,WIDTH=200,SCROLLBARS");
 		
 		newWindow.print();
 	}
+	
 	
 	/*
 	function TestLista(){
@@ -261,10 +278,10 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
 		var filtro = {
             fechaDesde: $.trim($("#fechaDesde").val()),
 			fechaHasta: $.trim($("#fechaHasta").val()),
+			idTipoNota: $.trim($("#cboTipoNotaFiltro").val()),
+			tipoNota: $.trim($( "#cboTipoNotaFiltro option:selected" ).text()),
 			serieNumero: $.trim($("#serieNumeroFiltro").val()),
-			cliente: $.trim($("#clienteFiltro").val()),
-			idEstado: $.trim($("#cboEstadoFiltro").val()),
-			estado: $.trim($("#cboEstadoFiltro option:selected").text())
+			cliente: $.trim($("#clienteFiltro").val())
         };
 		
 		$('#debug').html(filtro);
@@ -272,7 +289,7 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
 		console.log("*********************");
 		$.ajax({
 			type: "POST",            
-			url: "ventas/guia_remision/dataListaGuiaRemision.php?p="+Math.random(),
+			url: "ventas/nota/dataListaNota.php?p="+Math.random(),
 			data: { filtro: filtro },
 			success: function(result){
 				//alert(result);
@@ -286,6 +303,7 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
 		})	
 	}
 	*/
+	
 		
 
 </script>

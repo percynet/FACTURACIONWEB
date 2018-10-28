@@ -159,7 +159,7 @@ if(isset($_SESSION['paramdb']) && isset($_SESSION['USUARIO'])){
 		var chofer = $("#choferFiltro").val();
 		
 		if(idTransportista == "0"){
-			alert("Seleccione el transportista");
+			Mostrar_Mensaje_Notificacion("warning","Debe seleccionar el transportista");
 			return false;
 		}
 
